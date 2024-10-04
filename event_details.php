@@ -90,7 +90,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
             <div class="modal-body">
                 <div class="col-12">
                     <div class="bg-light rounded h-100 p-4">
-                        <form action="api_subject.php?type=add" method="post">
+                        <form action="api_event.php?type=add" method="post">
                             <div class="row mb-3">
                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Church Code</label>
                                 <div class="col-sm-9">
@@ -171,12 +171,12 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     function deletestud(enroll) {
         let isDelete = confirm('Are you sure to delete?');
         if (isDelete) {
-            window.location = `api_subject.php?type=delete&enroll=${enroll}`;
+            window.location = `api_event.php?type=delete&enroll=${enroll}`;
         }
     }
 
     function updatestud(enroll) {
-        window.location = `api_subject_update.php?enroll=${enroll}`;
+        window.location = `api_event_update.php?enroll=${enroll}`;
     }
 </script>
 

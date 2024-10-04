@@ -56,7 +56,7 @@ $result = mysqli_query($conn, $sql);
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">View Attendance</h6>
-                <form class="row gy-2 gx-3 align-items-center border p-2 mb-4" action="view_teacher_attend.php" method="get">
+                <form class="row gy-2 gx-3 align-items-center border p-2 mb-4" action="view_leader_attend.php" method="get">
                     <div class="col-auto d-flex">
                         <label class="" for="autoSizingSelect">Start Date</label>
                         <input type="date" name="startdate" date_format="yyyy-mm-dd" class="form-control" required>

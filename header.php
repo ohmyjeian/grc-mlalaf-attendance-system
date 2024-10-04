@@ -82,8 +82,8 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
                         <a href="view_admin_attend.php" class="nav-item nav-link"><i class="fas fa-clipboard-check me-2"></i></i>View Attendance</a>
                         <a href="manual_attend.php" class="nav-item nav-link"><i class="fas fa-clipboard-check me-2"></i></i>Attendance</a>
                         <a href="stud_details.php" class="nav-item nav-link"><i class="fas fa-user-graduate me-2"></i></i>Students Details</a>
-                        <a href="teacher_details.php" class="nav-item nav-link"><i class="fas fa-chalkboard-teacher me-2"></i></i>Leaders Details</a>
-                        <a href="subject_details.php" class="nav-item nav-link"><i class="fas fa-book me-2"></i></i>Ministry Details</a>
+                        <a href="leader_details.php" class="nav-item nav-link"><i class="fas fa-chalkboard-teacher me-2"></i></i>Leaders Details</a>
+                        <a href="event_details.php" class="nav-item nav-link"><i class="fas fa-book me-2"></i></i>Ministry Details</a>
                         <a href="timetable.php" class="nav-item nav-link"><i class="fas fa-table me-2"></i>Set Time Table</a>
                         <a href="settings.php" class="nav-item nav-link"><i class="fas fa-cog me-2"></i>Settings</a>
                     </div>
@@ -142,7 +142,7 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
                     <div class="navbar-nav w-100">
                         <a href="./" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                         <a href="take_attendance.php" class="nav-item nav-link"><i class="far fa-calendar-check me-2"></i>Take Attendance</a>
-                        <a href="view_teacher_attend.php" class="nav-item nav-link"><i class="fas fa-clipboard-check me-2"></i>View Attendance</a>
+                        <a href="view_leader_attend.php" class="nav-item nav-link"><i class="fas fa-clipboard-check me-2"></i>View Attendance</a>
                     </div>
                 </nav>
             </div>

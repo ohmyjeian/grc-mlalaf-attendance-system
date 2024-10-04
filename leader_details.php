@@ -88,7 +88,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
             <div class="modal-body">
                 <div class="col-12">
                     <div class="bg-light rounded h-100 p-4">
-                        <form action="api_teacher.php?type=add" method="post">
+                        <form action="api_leader.php?type=add" method="post">
                             <div class="row mb-3">
                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Leader ID</label>
                                 <div class="col-sm-9">
@@ -158,12 +158,12 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     function deletestud(enroll) {
         let isDelete = confirm('Are you sure to delete?');
         if (isDelete) {
-            window.location = `api_teacher.php?type=delete&enroll=${enroll}`;
+            window.location = `api_leader.php?type=delete&enroll=${enroll}`;
         }
     }
 
     function updatestud(enroll) {
-        window.location = `api_teacher_update.php?enroll=${enroll}`;
+        window.location = `api_leader_update.php?enroll=${enroll}`;
     }
 </script>
 

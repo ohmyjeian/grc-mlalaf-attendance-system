@@ -25,13 +25,13 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
             $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
         Teacher Added.
         </div>';
-            header("location: teacher_details.php");
+            header("location: leader_details.php");
             exit();
         } else {
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
         Something went wrong!.
         </div>';
-            header("location: teacher_details.php");
+            header("location: leader_details.php");
             exit();
         }
     }
@@ -45,13 +45,13 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
             $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
         Teacher Deleted.
         </div>';
-            header("location: teacher_details.php");
+            header("location: leader_details.php");
             exit();
         } else {
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
         Something went wrong!.
         </div>';
-            header("location: teacher_details.php");
+            header("location: leader_details.php");
             exit();
         }
     }
@@ -70,13 +70,13 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
             $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
         Teacher Details Updated.
         </div>';
-            header("location: teacher_details.php");
+            header("location: leader_details.php");
             exit();
         } else {
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
         Something went wrong!.
         </div>';
-            header("location: teacher_details.php");
+            header("location: leader_details.php");
             exit();
         }
     }
