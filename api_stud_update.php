@@ -55,12 +55,6 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                 <option selected="">Open this select menu</option>
                                 <option value="1" <?php if ($row['semester'] == '1') echo ' selected="selected"'; ?>>First</option>
                                 <option value="2" <?php if ($row['semester'] == '2') echo ' selected="selected"'; ?>>Second</option>
-                                <option value="3" <?php if ($row['semester'] == '3') echo ' selected="selected"'; ?>>Third</option>
-                                <option value="4" <?php if ($row['semester'] == '4') echo ' selected="selected"'; ?>>Fourth</option>
-                                <option value="5" <?php if ($row['semester'] == '5') echo ' selected="selected"'; ?>>Fifth</option>
-                                <option value="6" <?php if ($row['semester'] == '6') echo ' selected="selected"'; ?>>Sixth</option>
-                                <option value="7" <?php if ($row['semester'] == '7') echo ' selected="selected"'; ?>>Seven</option>
-                                <option value="8" <?php if ($row['semester'] == '8') echo ' selected="selected"'; ?>>Eight</option>
                             </select>
                         </div>
                     </div>
@@ -69,10 +63,16 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         <div class="col-sm-9">
                             <select class="form-select" name="branch" value="<?php echo $row['branch']; ?>" required>
                                 <option selected="">Open this select menu</option>
-                                <option value="Computer Engineering" <?php if ($row['branch'] == 'Computer Engineering') echo ' selected="selected"'; ?>>Computer Engineering</option>
-                                <option value="Mechanical Engineering" <?php if ($row['branch'] == 'Mechanical Engineering') echo ' selected="selected"'; ?>>Mechanical Engineering</option>
-                                <option value="Electrical Engineering" <?php if ($row['branch'] == 'Electrical Engineering') echo ' selected="selected"'; ?>>Electrical Engineering</option>
-                                <option value="Civil Engineering" <?php if ($row['branch'] == 'Civil Engineering') echo ' selected="selected"'; ?>>Civil Engineering</option>
+                                <option value="TEAM MBBEM" <?php if ($row['branch'] == 'TEAM MBBEM') echo ' selected="selected"'; ?>>TEAM MBBEM</option>
+                                <option value="TEAM FJC" <?php if ($row['branch'] == 'TEAM FJC') echo ' selected="selected"'; ?>>TEAM FJC</option>
+                                <option value="TEAM JTCC" <?php if ($row['branch'] == 'TEAM JTCC') echo ' selected="selected"'; ?>>TEAM JTCC</option>
+                                <option value="TEAM GTC" <?php if ($row['branch'] == 'TEAM GTC') echo ' selected="selected"'; ?>>TEAM GTC</option>
+                                <option value="TEAM GEC" <?php if ($row['branch'] == 'TEAM GEC') echo ' selected="selected"'; ?>>TEAM GEC</option>
+                                <option value="TEAM PRAISE" <?php if ($row['branch'] == 'TEAM PRAISE') echo ' selected="selected"'; ?>>TEAM PRAISE</option>
+                                <option value="TEAM LWCC" <?php if ($row['branch'] == 'TEAM LWCC') echo ' selected="selected"'; ?>>TEAM LWCC</option>
+                                <option value="TEAM CCF" <?php if ($row['branch'] == 'TEAM CCF') echo ' selected="selected"'; ?>>TEAM CCF</option>
+                                <option value="TEAM ZION" <?php if ($row['branch'] == 'TEAM ZION') echo ' selected="selected"'; ?>>TEAM ZION</option>
+                                <option value="TEAM SHEPHERDS" <?php if ($row['branch'] == 'TEAM SHEPHERDS') echo ' selected="selected"'; ?>>TEAM SHEPHERDS</option>
                             </select>
                         </div>
                     </div>
@@ -98,11 +98,11 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         <div class="col-sm-9">
                             <select class="form-select" name="batch" value="<?php echo $row['batch']; ?>" required>
                                 <option selected="">Open this select menu</option>
-                                <option value="A1" <?php if ($row['batch'] == 'A1') echo ' selected="selected"'; ?>>A1</option>
-                                <option value="A2" <?php if ($row['batch'] == 'A2') echo ' selected="selected"'; ?>>A2</option>
-                                <option value="A3" <?php if ($row['batch'] == 'A3') echo ' selected="selected"'; ?>>A3</option>
-                                <option value="A4" <?php if ($row['batch'] == 'A4') echo ' selected="selected"'; ?>>A4</option>
-                                <option value="A5" <?php if ($row['batch'] == 'A5') echo ' selected="selected"'; ?>>A5</option>
+                                <option value="1" <?php if ($row['batch'] == '1') echo ' selected="selected"'; ?>>First</option>
+                                <option value="2" <?php if ($row['batch'] == '2') echo ' selected="selected"'; ?>>Second</option>
+                                <option value="3" <?php if ($row['batch'] == '3') echo ' selected="selected"'; ?>>Third</option>
+                                <option value="4" <?php if ($row['batch'] == '4') echo ' selected="selected"'; ?>>Fourth</option>
+                                <option value="5" <?php if ($row['batch'] == '5') echo ' selected="selected"'; ?>>Fifth</option>
                             </select>
                         </div>
                     </div>

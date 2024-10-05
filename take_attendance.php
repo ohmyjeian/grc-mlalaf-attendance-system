@@ -52,23 +52,17 @@ $teacher_row = mysqli_fetch_assoc($teacher_res);
                             <option value="">Select Semester</option>
                             <option value="1">First</option>
                             <option value="2">Second</option>
-                            <option value="3">Third</option>
-                            <option value="4">Fourth</option>
-                            <option value="5">Fifth</option>
-                            <option value="6">Sixth</option>
-                            <option value="7">Seven</option>
-                            <option value="8">Eight</option>
                         </select>
                     </div>
                     <div class="col-auto">
                         <label class="visually-hidden" for="autoSizingSelect">Preference</label>
                         <select class="form-select" name="batch" id="autoSizingSelect">
                             <option value="">Select Year Level</option>
-                            <option value="A1">A1</option>
-                            <option value="A2">A2</option>
-                            <option value="A3">A3</option>
-                            <option value="A4">A4</option>
-                            <option value="A5">A5</option>
+                            <option value="1">First</option>
+                            <option value="2">Second</option>
+                            <option value="3">Third</option>
+                            <option value="4">Fourt</option>
+                            <option value="5">Fifth</option>
                         </select>
                     </div>
                     <div class="col-auto">

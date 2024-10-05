@@ -71,10 +71,10 @@ if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
-                            <td>Subject</td>
-                            <td>Batch</td>
+                            <td>Event</td>
+                            <td>Year Level</td>
                             <td>Semester</td>
-                            <td>Branch</td>
+                            <td>Church</td>
                             <td>Attendance Day</td>
                             <td>Slot</td>
                         </tr>
@@ -113,7 +113,7 @@ if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']
                             <tr>
                                 <th scope="col">Mark Attendance</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Enrollment No</th>
+                                <th scope="col">Student No</th>
                             </tr>
                         </thead>
                         <tbody>

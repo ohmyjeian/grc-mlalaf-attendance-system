@@ -43,11 +43,17 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                     <div class="col-auto">
                         <label class="visually-hidden" for="autoSizingSelect">Preference</label>
                         <select class="form-select" name="branch" required>
-                            <option value="">Select Branch</option>
-                            <option value="Computer Engineering">Computer Engineering</option>
-                            <option value="Civil Engineering">Civil Engineering</option>
-                            <option value="Mechanical Engineering">Mechanical Engineering</option>
-                            <option value="Electrical Engineering">Electrical Engineering</option>
+                            <option value="">Select Church</option>
+                            <option value="TEAM MBBEM">TEAM MBBEM</option>
+                            <option value="TEAM FJC">TEAM FJC</option>
+                            <option value="TEAM JTCC">TEAM JTCC</option>
+                            <option value="TEAM GTC">TEAM GTC</option>
+                            <option value="TEAM GEC">TEAM GEC</option>
+                            <option value="TEAM PRAISE">TEAM PRAISE</option>
+                            <option value="TEAM LWCC">TEAM LWCC</option>
+                            <option value="TEAM CCF">TEAM CCF</option>
+                            <option value="TEAM ZION">TEAM ZION</option>
+                            <option value="TEAM SHEPHERDS">TEAM SHEPHERDS</option>
                         </select>
                     </div>
                     <div class="col-auto">
@@ -56,23 +62,17 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                             <option value="">Select Semester</option>
                             <option value="1">First</option>
                             <option value="2">Second</option>
-                            <option value="3">Third</option>
-                            <option value="4">Fourth</option>
-                            <option value="5">Fifth</option>
-                            <option value="6">Sixth</option>
-                            <option value="7">Seven</option>
-                            <option value="8">Eight</option>
                         </select>
                     </div>
                     <div class="col-auto">
                         <label class="visually-hidden" for="autoSizingSelect">Preference</label>
                         <select class="form-select" name="batch" id="autoSizingSelect">
-                            <option value="">Select Batch</option>
-                            <option value="A1">A1</option>
-                            <option value="A2">A2</option>
-                            <option value="A3">A3</option>
-                            <option value="A4">A4</option>
-                            <option value="A5">A5</option>
+                            <option value="">Select Year Level</option>
+                            <option value="1">First</option>
+                            <option value="2">Second</option>
+                            <option value="3">Third</option>
+                            <option value="4">Fourth</option>
+                            <option value="5">Fifth</option>
                         </select>
                     </div>
                     <div class="col-auto">
@@ -187,14 +187,20 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Branch</label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Church</label>
                                     <div class="col-sm-9">
                                         <select class="form-select" name="branch" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
-                                            <option value="Computer Engineering">Computer Engineering</option>
-                                            <option value="Civil Engineering">Civil Engineering</option>
-                                            <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                            <option value="Electrical Engineering">Electrical Engineering</option>
+                                            <option value="TEAM MBBEM">TEAM MBBEM</option>
+                                            <option value="TEAM FJC">TEAM FJC</option>
+                                            <option value="TEAM JTCC">TEAM JTCC</option>
+                                            <option value="TEAM GTC">TEAM GTC</option>
+                                            <option value="TEAM GEC">TEAM GEC</option>
+                                            <option value="TEAM PRAISE">TEAM PRAISE</option>
+                                            <option value="TEAM LWCC">TEAM LWCC</option>
+                                            <option value="TEAM CCF">TEAM CCF</option>
+                                            <option value="TEAM ZION">TEAM ZION</option>
+                                            <option value="TEAM SHEPHERDS">TEAM SHEPHERDS</option>
                                         </select>
                                     </div>
                                 </div>
@@ -205,25 +211,19 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                             <option value="">Open this select menu</option>
                                             <option value="1">First</option>
                                             <option value="2">Second</option>
-                                            <option value="3">Third</option>
-                                            <option value="4">Fourth</option>
-                                            <option value="5">Fifth</option>
-                                            <option value="6">Sixth</option>
-                                            <option value="7">Seven</option>
-                                            <option value="8">Eight</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Batch</label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Year Level</label>
                                     <div class="col-sm-9">
                                         <select class="form-select" name="batch" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
-                                            <option value="A1">A1</option>
-                                            <option value="A2">A2</option>
-                                            <option value="A3">A3</option>
-                                            <option value="A4">A4</option>
-                                            <option value="A5">A5</option>
+                                            <option value="1">First</option>
+                                            <option value="2">Second</option>
+                                            <option value="3">Third</option>
+                                            <option value="4">Fourth</option>
+                                            <option value="5">Fifth</option>
                                         </select>
                                     </div>
                                 </div>
@@ -300,14 +300,20 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         <form action="api_timetable.php?type=delete" method="post">
                             <div>
                                 <div class="row mb-3">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Branch</label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Church</label>
                                     <div class="col-sm-9">
                                         <select class="form-select" name="branch" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
-                                            <option value="Computer Engineering">Computer Engineering</option>
-                                            <option value="Civil Engineering">Civil Engineering</option>
-                                            <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                            <option value="Electrical Engineering">Electrical Engineering</option>
+                                            <option value="TEAM MBBEM">TEAM MBBEM</option>
+                                            <option value="TEAM FJC">TEAM FJC</option>
+                                            <option value="TEAM JTCC">TEAM JTCC</option>
+                                            <option value="TEAM GTC">TEAM GTC</option>
+                                            <option value="TEAM GEC">TEAM GEC</option>
+                                            <option value="TEAM PRAISE">TEAM PRAISE</option>
+                                            <option value="TEAM LWCC">TEAM LWCC</option>
+                                            <option value="TEAM CCF">TEAM CCF</option>
+                                            <option value="TEAM ZION">TEAM ZION</option>
+                                            <option value="TEAM SHEPHERDS">TEAM SHEPHERDS</option>
                                         </select>
                                     </div>
                                 </div>
@@ -329,25 +335,19 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                             <option value="">Open this select menu</option>
                                             <option value="1">First</option>
                                             <option value="2">Second</option>
-                                            <option value="3">Third</option>
-                                            <option value="4">Fourth</option>
-                                            <option value="5">Fifth</option>
-                                            <option value="6">Sixth</option>
-                                            <option value="7">Seven</option>
-                                            <option value="8">Eight</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Batch</label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Year Level</label>
                                     <div class="col-sm-9">
                                         <select class="form-select" name="batch" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
-                                            <option value="A1">A1</option>
-                                            <option value="A2">A2</option>
-                                            <option value="A3">A3</option>
-                                            <option value="A4">A4</option>
-                                            <option value="A5">A5</option>
+                                            <option value="1">First</option>
+                                            <option value="2">Second</option>
+                                            <option value="3">Third</option>
+                                            <option value="4">Fourth</option>
+                                            <option value="5">Fifth</option>
                                         </select>
                                     </div>
                                 </div>
@@ -377,7 +377,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <select class="form-select" name="Monday[]" id="floatingSelect" aria-label="Floating label select example" required>
-                                                            <option value="">Select Subject</option>
+                                                            <option value="">Select Event</option>
                                                             <?php
                                                             $tsql = "SELECT * FROM subjects";
                                                             $tresult = mysqli_query($conn, $tsql);
@@ -396,7 +396,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <select class="form-select" name="Tuesday[]" id="floatingSelect" aria-label="Floating label select example" required>
-                                                            <option value="">Select Subject</option>
+                                                            <option value="">Select Event</option>
                                                             <?php
                                                             $tsql = "SELECT * FROM subjects";
                                                             $tresult = mysqli_query($conn, $tsql);
@@ -415,7 +415,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <select class="form-select" name="Wednesday[]" id="floatingSelect" aria-label="Floating label select example" required>
-                                                            <option value="">Select Subject</option>
+                                                            <option value="">Select Event</option>
                                                             <?php
                                                             $tsql = "SELECT * FROM subjects";
                                                             $tresult = mysqli_query($conn, $tsql);
@@ -434,7 +434,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <select class="form-select" name="Thursday[]" id="floatingSelect" aria-label="Floating label select example" required>
-                                                            <option value="">Select Subject</option>
+                                                            <option value="">Select Event</option>
                                                             <?php
                                                             $tsql = "SELECT * FROM subjects";
                                                             $tresult = mysqli_query($conn, $tsql);
@@ -453,7 +453,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <select class="form-select" name="Friday[]" id="floatingSelect" aria-label="Floating label select example" required>
-                                                            <option value="">Select Subject</option>
+                                                            <option value="">Select Event</option>
                                                             <?php
                                                             $tsql = "SELECT * FROM subjects";
                                                             $tresult = mysqli_query($conn, $tsql);
@@ -472,7 +472,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <select class="form-select" name="Saturday[]" id="floatingSelect" aria-label="Floating label select example" required>
-                                                            <option value="">Select Subject</option>
+                                                            <option value="">Select Event</option>
                                                             <?php
                                                             $tsql = "SELECT * FROM subjects";
                                                             $tresult = mysqli_query($conn, $tsql);

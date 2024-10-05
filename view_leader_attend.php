@@ -82,11 +82,11 @@ $result = mysqli_query($conn, $sql);
                         <label class="visually-hidden" for="autoSizingSelect">Preference</label>
                         <select class="form-select" name="batch" id="autoSizingSelect" required>
                             <option value="">Select Batch</option>
-                            <option value="A1">A1</option>
-                            <option value="A2">A2</option>
-                            <option value="A3">A3</option>
-                            <option value="A4">A4</option>
-                            <option value="A5">A5</option>
+                            <option value="1">First</option>
+                            <option value="2">Second</option>
+                            <option value="3">Third</option>
+                            <option value="4">Fourth</option>
+                            <option value="5">Fifth</option>
                         </select>
                     </div>
 

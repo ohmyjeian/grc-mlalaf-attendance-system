@@ -116,12 +116,6 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                         <option selected="">Open this select menu</option>
                                         <option value="1">First</option>
                                         <option value="2">Second</option>
-                                        <option value="3">Third</option>
-                                        <option value="4">Fourth</option>
-                                        <option value="5">Fifth</option>
-                                        <option value="6">Sixth</option>
-                                        <option value="7">Seven</option>
-                                        <option value="8">Eight</option>
                                     </select>
                                 </div>
                             </div>
@@ -130,10 +124,16 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                 <div class="col-sm-9">
                                     <select class="form-select" name="branch" id="floatingSelect" aria-label="Floating label select example" required>
                                         <option selected="">Open this select menu</option>
-                                        <option value="Computer Engineering">Computer Engineering</option>
-                                        <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                        <option value="Electrical Engineering">Electrical Engineering</option>
-                                        <option value="Civil Engineering">Civil Engineering</option>
+                                        <option value="TEAM MBBEM">TEAM MBBEM</option>
+                                        <option value="TEAM FJC">TEAM FJC</option>
+                                        <option value="TEAM JTCC">TEAM JTCC</option>
+                                        <option value="TEAM GTC">TEAM GTC</option>
+                                        <option value="TEAM GEC">TEAM GEC</option>
+                                        <option value="TEAM PRAISE">TEAM PRAISE</option>
+                                        <option value="TEAM LWCC">TEAM LWCC</option>
+                                        <option value="TEAM CCF">TEAM CCF</option>
+                                        <option value="TEAM ZION">TEAM ZION</option>
+                                        <option value="TEAM SHEPHERDS">TEAM SHEPHERDS</option>
                                     </select>
                                 </div>
                             </div>

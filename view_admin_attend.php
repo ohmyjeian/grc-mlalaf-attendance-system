@@ -64,21 +64,27 @@ $result = mysqli_query($conn, $sql);
                         <label class="visually-hidden" for="autoSizingSelect">Preference</label>
                         <select class="form-select" name="batch" id="autoSizingSelect" required>
                             <option value="">Select Year Level</option>
-                            <option value="A1">A1</option>
-                            <option value="A2">A2</option>
-                            <option value="A3">A3</option>
-                            <option value="A4">A4</option>
-                            <option value="A5">A5</option>
+                            <option value="1">First</option>
+                            <option value="2">Second</option>
+                            <option value="3">Third</option>
+                            <option value="4">Fourth</option>
+                            <option value="5">Fifth</option>
                         </select>
                     </div>
                     <div class="col-auto">
                         <label class="visually-hidden" for="autoSizingSelect">Preference</label>
                         <select class="form-select" name="branch" id="autoSizingSelect" required>
                             <option value="">Select Church</option>
-                            <option value="Computer Engineering">Computer Engineering</option>
-                            <option value="Mechanical Engineering">Mechanical Engineering</option>
-                            <option value="Electrical Engineering">Electrical Engineering</option>
-                            <option value="Civil Engineering">Civil Engineering</option>
+                            <option value="TEAM MBBEM">TEAM MBBEM</option>
+                            <option value="TEAM FJC">TEAM FJC</option>
+                            <option value="TEAM JTCC">TEAM JTCC</option>
+                            <option value="TEAM GTC">TEAM GTC</option>
+                            <option value="TEAM GEC">TEAM GEC</option>
+                            <option value="TEAM PRAISE">TEAM PRAISE</option>
+                            <option value="TEAM LWCC">TEAM LWCC</option>
+                            <option value="TEAM CCF">TEAM CCF</option>
+                            <option value="TEAM ZION">TEAM ZION</option>
+                            <option value="TEAM SHEPHERDS">TEAM SHEPHERDS</option>
                         </select>
                     </div>
 

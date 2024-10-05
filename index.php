@@ -38,11 +38,11 @@ require "conn.php";
                         </tr>
                         <tr>
                             <th scope="col">Church Role</th>
-                            <td><?php echo $teacher_row['education']; ?></td>
+                            <td><?php echo $teacher_row['e']; ?></td>
                         </tr>
                         <tr>
                             <th scope="col">Designation</th>
-                            <td><?php echo $teacher_row['designation']; ?></td>
+                            <td><?php echo $teacher_row['']; ?></td>
                         </tr>
                         <tr>
                             <th scope="col">Church</th>
