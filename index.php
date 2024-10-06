@@ -14,10 +14,72 @@ require "conn.php";
 
 
 <!-- Blank Start -->
-<div class="container-fluid pt-4 px-4">
-    <div class="row vh-100 bg-light rounded align-items-center justify-content-center mx-0">
-        <div class="col-md-6 text-center">
-            <h3>Welcome To GRC-MLALAF Attendance System</h3>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loop</title>
+    <style>
+        .typed-text {
+            font-family: 'Courier New', Courier, monospace;
+            width: 100%;
+            margin: 0 auto;
+            font-size: 24px;
+            overflow-wrap: break-word;
+            word-wrap: break-word;    
+            white-space: normal;      
+        }
+
+        @media (max-width: 600px) {
+            .typed-text {
+                font-size: 18px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid pt-4 px-4">
+        <div class="row vh-100 bg-light rounded align-items-center justify-content-center mx-0">
+            <div class="col-md-6 text-center">
+                <h3 id="welcomeText"></h3> 
+      
+
+    <script type="module">
+      
+        window.addEventListener('DOMContentLoaded', () => {
+            const text = "Welcome To GRC-MLALAF Attendance System";
+            const welcomeText = document.getElementById('welcomeText');
+
+            if (welcomeText) {
+                welcomeText.classList.add('typed-text');
+                typeWriter(welcomeText, text, 100); 
+            }
+        });
+
+        function typeWriter(element, text, delay) {
+            let index = 0;
+
+            function typeNextCharacter() {
+                if (index < text.length) {
+                    element.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(typeNextCharacter, delay);
+                } else {
+                    
+                    setTimeout(() => {
+                        element.textContent = ""; 
+                        index = 0; 
+                        typeNextCharacter(); 
+                    }, 1000); 
+                }
+            }
+
+            typeNextCharacter(); 
+        }
+    </script>
+</body>
+</html>
 
             <?php
             if (isset($_SESSION['teacher_id'])) {
