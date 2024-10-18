@@ -1,11 +1,17 @@
 <?php
 session_start();
+
+// Check if the user is logged in
 if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
+    // Set the profile picture path
+    $profilePic = isset($_SESSION['profile_pic']) ? 'img/profile/' . $_SESSION['profile_pic'] : 'img/grclogo.jpg';
 } else {
+    // Redirect to login page if not logged in
     header("location: login.php");
     exit();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -68,7 +74,7 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
                     </a>
                     <div class="d-flex align-items-center ms-4 mb-4">
                         <div class="position-relative">
-                            <img class="rounded-circle" src="img/admin.jpg" alt="" style="width: 40px; height: 40px;">
+                            <img class="rounded-circle" src="img/grclogo.png" alt="" style="width: 40px; height: 40px;">
                             <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                         </div>
                         <div class="ms-3">
@@ -79,11 +85,11 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
                     <div class="navbar-nav w-100">
                         <a href="./" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
 
-                        <a href="view_admin_attend.php" class="nav-item nav-link"><i class="fas fa-clipboard-check me-2"></i></i>View Attendance</a>
-                        <a href="manual_attend.php" class="nav-item nav-link"><i class="fas fa-clipboard-check me-2"></i></i>Attendance</a>
-                        <a href="stud_details.php" class="nav-item nav-link"><i class="fas fa-user-graduate me-2"></i></i>Students Details</a>
-                        <a href="leader_details.php" class="nav-item nav-link"><i class="fas fa-chalkboard-teacher me-2"></i></i>Leaders Details</a>
-                        <a href="event_details.php" class="nav-item nav-link"><i class="fas fa-book me-2"></i></i>Ministry Details</a>
+                        <a href="view_admin_attend.php" class="nav-item nav-link"><i class="fas fa-clipboard-check me-2"></i>View Attendance</a>
+                        <a href="manual_attend.php" class="nav-item nav-link"><i class="fas fa-clipboard-check me-2"></i>Attendance</a>
+                        <a href="stud_details.php" class="nav-item nav-link"><i class="fas fa-user-graduate me-2"></i>Scholars Details</a>
+                        <a href="leader_details.php" class="nav-item nav-link"><i class="fas fa-chalkboard-teacher me-2"></i>Leaders Details</a>
+                        <a href="event_details.php" class="nav-item nav-link"><i class="fas fa-book me-2"></i>Events Details</a>
                         <a href="timetable.php" class="nav-item nav-link"><i class="fas fa-table me-2"></i>Set Time Table</a>
                         <a href="settings.php" class="nav-item nav-link"><i class="fas fa-cog me-2"></i>Settings</a>
                     </div>
@@ -91,7 +97,7 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
             </div>
             <!-- Admin Sidebar End -->
         <?php
-        } else if ($_SESSION['usertype'] == "STUDENT") {
+        } else if ($_SESSION['usertype'] == "SCHOLAR") {
         ?>
             <!-- Student Sidebar Start -->
             <div class="sidebar pe-4 pb-3">
@@ -101,7 +107,7 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
                     </a>
                     <div class="d-flex align-items-center ms-4 mb-4">
                         <div class="position-relative">
-                            <img class="rounded-circle" src="img/student.jpg" alt="" style="width: 40px; height: 40px;">
+                        <img class="rounded-circle" src="<?php echo $profilePic; ?>" alt="Profile Picture" style="width: 40px; height: 40px;">
                             <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                         </div>
                         <div class="ms-3">
@@ -123,7 +129,7 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
         <?php
         } else {
         ?>
-            <!-- Teacher Sidebar Start -->
+            <!-- Leader Sidebar Start -->
             <div class="sidebar pe-4 pb-3">
                 <nav class="navbar bg-light navbar-light">
                     <a href="./" class="navbar-brand mx-4 mb-3">
@@ -131,7 +137,7 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
                     </a>
                     <div class="d-flex align-items-center ms-4 mb-4">
                         <div class="position-relative">
-                            <img class="rounded-circle" src="img/leader.jpg" alt="" style="width: 40px; height: 40px;">
+                            <img class="rounded-circle" src="img/grclogo.png" alt="" style="width: 40px; height: 40px;">
                             <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                         </div>
                         <div class="ms-3">
@@ -146,7 +152,7 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
                     </div>
                 </nav>
             </div>
-            <!-- Teacher Sidebar End -->
+            <!-- Leader Sidebar End -->
         <?php
         }
         ?>
@@ -156,7 +162,7 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
                 <a href="./" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary"><img class="rounded-circle" src="img/mlalaf.png" alt="" style="width: 40px; height: 40px;"></i></i></h2>
+                    <h2 class="text-primary"><img class="rounded-circle" src="img/mlalaf.png" alt="" style="width: 40px; height: 40px;"></h2>
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
@@ -168,8 +174,6 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
                             <span class="d-none d-lg-inline-flex"><?php echo $_SESSION['username']; ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <!-- <a href="#" class="dropdown-item">My Profile</a> -->
-                            <!-- <a href="#" class="dropdown-item">Settings</a> -->
                             <a href="logout.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>

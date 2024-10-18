@@ -1,8 +1,8 @@
 <?php
-// print_r($_POST);
 require "conn.php";
 session_start();
 
+// Check if user is an admin
 if ($_SESSION['usertype'] != 'ADMIN') {
     session_destroy();
     header("location: login.php");
@@ -12,71 +12,74 @@ if ($_SESSION['usertype'] != 'ADMIN') {
 if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
 
     if (isset($_GET['type']) && $_GET['type'] == "add") {
-        $subjectcode = mysqli_escape_string($conn, $_POST['subjectcode']);
-        $description = mysqli_escape_string($conn, $_POST['description']);
-        $abbrevation = mysqli_escape_string($conn, $_POST['abbrevation']);
+        $eventcode = mysqli_escape_string($conn, $_POST['event_code']);
+        $description = mysqli_escape_string($conn, $_POST['name']);
         $semester = mysqli_escape_string($conn, $_POST['semester']);
-        $branch = mysqli_escape_string($conn, $_POST['branch']);
-        $teacherid = mysqli_escape_string($conn, $_POST['teacherid']);
+        
+        // Get admin_id from the session
+        $admin_id = $_SESSION['admin_id'];
 
-        $sql = "INSERT INTO `subjects`(`subject_code`, `name`, `abbreviation`, `semester`, `branch`, `teacher_id`) VALUES ('$subjectcode','$description','$abbrevation','$semester','$branch','$teacherid')";
+        // Include admin_id in the INSERT query
+        $sql = "INSERT INTO `events`(`event_code`, `name`, `semester`, `admin_id`) 
+                VALUES ('$eventcode','$description','$semester','$admin_id')";
+
         $result = mysqli_query($conn, $sql);
         if ($result) {
             $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
-        Subject Added.
-        </div>';
+                Event Added.
+            </div>';
             header("location: event_details.php");
             exit();
         } else {
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-        Something went wrong!.
-        </div>';
+                Something went wrong!
+            </div>';
             header("location: event_details.php");
             exit();
         }
     }
 
     if (isset($_GET['type']) && $_GET['type'] == "delete") {
-        $enroll = mysqli_escape_string($conn, $_GET['enroll']);
+        $event_code = mysqli_escape_string($conn, $_GET['event_code']);    
 
-        $sql = "DELETE FROM `subjects` WHERE subject_code='$enroll'";
+        $sql = "DELETE FROM `events` WHERE event_code='$event_code'";
         $result = mysqli_query($conn, $sql);
         if ($result) {
             $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
-        Subject Deleted.
-        </div>';
+                Event Deleted.
+            </div>';
             header("location: event_details.php");
             exit();
         } else {
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-        Something went wrong!.
-        </div>';
+                Something went wrong!
+            </div>';
             header("location: event_details.php");
             exit();
         }
     }
 
     if (isset($_GET['type']) && $_GET['type'] == "update") {
-        $subjectcode = mysqli_escape_string($conn, $_POST['subjectcode']);
+        $eventcode = mysqli_escape_string($conn, $_POST['event_code']);
         $description = mysqli_escape_string($conn, $_POST['description']);
-        $abbrevation = mysqli_escape_string($conn, $_POST['abbrevation']);
         $semester = mysqli_escape_string($conn, $_POST['semester']);
-        $branch = mysqli_escape_string($conn, $_POST['branch']);
-        $teacherid = mysqli_escape_string($conn, $_POST['teacherid']);
+        $admin_id = $_SESSION['admin_id'];
 
-        $sql = "UPDATE `subjects` SET `name`='$description',`abbreviation`='$abbrevation',`semester`='$semester',`branch`='$branch',`teacher_id`='$teacherid' WHERE `subject_code`=$subjectcode";
+
+        $sql = "UPDATE `events` SET `name`='$description', `semester`='$semester', `admin_id`='$admin_id' 
+                WHERE `event_code`='$eventcode'";
        
         $result = mysqli_query($conn, $sql);
         if ($result) {
             $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
-        Subject Details Updated.
-        </div>';
+                Event Details Updated.
+            </div>';
             header("location: event_details.php");
             exit();
         } else {
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-        Something went wrong!.
-        </div>';
+                Something went wrong!
+            </div>';
             header("location: event_details.php");
             exit();
         }

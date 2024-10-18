@@ -15,9 +15,9 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
         $location = mysqli_escape_string($conn, $_POST['location']);
         $lat = mysqli_escape_string($conn, $_POST['lat']);
         $lon = mysqli_escape_string($conn, $_POST['lon']);
-        $covarage = mysqli_escape_string($conn, $_POST['covarage']);
+        $coverage = mysqli_escape_string($conn, $_POST['coverage']);
    
-        $sql = "UPDATE `settings` SET `location`='$location',`lat`='$lat',`lon`='$lon',`covarage`='$covarage' WHERE `id`='1'";
+        $sql = "UPDATE `settings` SET `location`='$location', `lat`='$lat', `lon`='$lon', `coverage`='$coverage' WHERE `id`='1'";
         $result = mysqli_query($conn, $sql);
         if ($result) {
             $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">

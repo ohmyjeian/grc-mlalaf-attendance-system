@@ -2,17 +2,15 @@
 require('header.php');
 require('conn.php');
 
-
-if ($_SESSION['usertype'] != 'STUDENT') {
+if ($_SESSION['usertype'] != 'SCHOLAR') {
     session_destroy();
     header("location: login.php");
     exit();
 }
 
-$enrollment_no = $_SESSION['enrollment_no'];
-$sql = "SELECT * FROM `attendance` WHERE `enrollment_no`= $enrollment_no ORDER BY id DESC";
+$student_no = $_SESSION['student_no'];
+$sql = "SELECT * FROM attendance WHERE `student_no` = $student_no ORDER BY id DESC";
 $result = mysqli_query($conn, $sql);
-
 ?>
 <div class="container pt-3 px-4 m-0">
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
@@ -23,7 +21,6 @@ $result = mysqli_query($conn, $sql);
         </ol>
     </nav>
 </div>
-
 
 <!-- Blank Start -->
 <div class="container-fluid pt-4 px-4">
@@ -48,10 +45,10 @@ $result = mysqli_query($conn, $sql);
                                 <th scope="col">#</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Day</th>
-                                <th scope="col">Subject</th>
+                                <th scope="col">Event</th>
                                 <th scope="col">Slot</th>
                                 <th scope="col">Batch</th>
-                                <th scope="col">QR Code Scanned @</th>
+                                <th scope="col">Present at</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,7 +61,7 @@ $result = mysqli_query($conn, $sql);
                                     <td><?php echo $row['date']; ?></td>
                                     <td><?php echo $row['day']; ?></td>
                                     <td><?php
-                                        $fssql = "SELECT * FROM `subjects` WHERE `subject_code`=" . $row['subject_code'];
+                                        $fssql = "SELECT * FROM events WHERE `event_code`=" . $row['event_code'];
                                         $fsresult = mysqli_query($conn, $fssql);
                                         $fsrow = mysqli_fetch_assoc($fsresult);
                                         echo $fsrow['name'];
@@ -85,8 +82,6 @@ $result = mysqli_query($conn, $sql);
     </div>
 </div>
 <!-- Blank End -->
-
-
 
 <?php
 require('footer.php');

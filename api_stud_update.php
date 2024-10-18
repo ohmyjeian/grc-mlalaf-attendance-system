@@ -23,9 +23,9 @@ if ($_SESSION['usertype'] != 'ADMIN') {
 <!-- Blank Start -->
 <div class="container-fluid pt-4 px-4">
     <?php
-    if (isset($_GET['enroll'])) {
-        $enroll = mysqli_escape_string($conn, $_GET['enroll']);
-        $sql = "SELECT * FROM students WHERE enrollment_no='$enroll'";
+    if (isset($_GET['student_no'])) {
+        $student_no = mysqli_escape_string($conn, $_GET['student_no']);
+        $sql = "SELECT * FROM scholars WHERE student_no='$student_no'";
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
     }
@@ -37,9 +37,9 @@ if ($_SESSION['usertype'] != 'ADMIN') {
             <div class="bg-light rounded h-100 p-4">
                 <form action="api_stud.php?type=update" method="post">
                     <div class="row mb-3">
-                        <label for="inputEmail3" class="col-sm-3 col-form-label">Enrollment No</label>
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">Student No</label>
                         <div class="col-sm-9">
-                            <input type="text" name="enrollmentno" class="form-control" value="<?php echo $enroll; ?>" id="inputEmail3" readonly>
+                            <input type="text" name="student_no" class="form-control" value="<?php echo $student_no; ?>" id="inputEmail3" readonly>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -49,9 +49,9 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="inputPassword3" class="col-sm-3 col-form-label">Select Semeter</label>
+                        <label for="inputPassword3" class="col-sm-3 col-form-label">Select Semester</label>
                         <div class="col-sm-9">
-                            <select class="form-select" name="semester" value="<?php echo $row['semester']; ?>" required>
+                            <select class="form-select" name="semester" required>
                                 <option selected="">Open this select menu</option>
                                 <option value="1" <?php if ($row['semester'] == '1') echo ' selected="selected"'; ?>>First</option>
                                 <option value="2" <?php if ($row['semester'] == '2') echo ' selected="selected"'; ?>>Second</option>
@@ -59,31 +59,20 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="inputPassword3" class="col-sm-3 col-form-label">Branch</label>
+                        <label for="inputPassword3" class="col-sm-3 col-form-label">Church</label>
                         <div class="col-sm-9">
-                            <select class="form-select" name="branch" value="<?php echo $row['branch']; ?>" required>
+                            <select class="form-select" name="church" required>
                                 <option selected="">Open this select menu</option>
-                                <option value="TEAM MBBEM" <?php if ($row['branch'] == 'TEAM MBBEM') echo ' selected="selected"'; ?>>TEAM MBBEM</option>
-                                <option value="TEAM FJC" <?php if ($row['branch'] == 'TEAM FJC') echo ' selected="selected"'; ?>>TEAM FJC</option>
-                                <option value="TEAM JTCC" <?php if ($row['branch'] == 'TEAM JTCC') echo ' selected="selected"'; ?>>TEAM JTCC</option>
-                                <option value="TEAM GTC" <?php if ($row['branch'] == 'TEAM GTC') echo ' selected="selected"'; ?>>TEAM GTC</option>
-                                <option value="TEAM GEC" <?php if ($row['branch'] == 'TEAM GEC') echo ' selected="selected"'; ?>>TEAM GEC</option>
-                                <option value="TEAM PRAISE" <?php if ($row['branch'] == 'TEAM PRAISE') echo ' selected="selected"'; ?>>TEAM PRAISE</option>
-                                <option value="TEAM LWCC" <?php if ($row['branch'] == 'TEAM LWCC') echo ' selected="selected"'; ?>>TEAM LWCC</option>
-                                <option value="TEAM CCF" <?php if ($row['branch'] == 'TEAM CCF') echo ' selected="selected"'; ?>>TEAM CCF</option>
-                                <option value="TEAM ZION" <?php if ($row['branch'] == 'TEAM ZION') echo ' selected="selected"'; ?>>TEAM ZION</option>
-                                <option value="TEAM SHEPHERDS" <?php if ($row['branch'] == 'TEAM SHEPHERDS') echo ' selected="selected"'; ?>>TEAM SHEPHERDS</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="inputPassword3" class="col-sm-3 col-form-label">Shift</label>
-                        <div class="col-sm-9">
-                            <select class="form-select" name="shift" value="<?php echo $row['shift']; ?>" required>
-                                <option selected="">Open this select menu</option>
-                                <option value="1" <?php if ($row['shift'] == '1') echo ' selected="selected"'; ?>>First</option>
-                                <option value="2" <?php if ($row['shift'] == '2') echo ' selected="selected"'; ?>>Second</option>
-                                <option value="3" <?php if ($row['shift'] == '3') echo ' selected="selected"'; ?>>Third</option>
+                                <option value="TEAM MBBEM" <?php if ($row['church'] == 'TEAM MBBEM') echo ' selected="selected"'; ?>>TEAM MBBEM</option>
+                                <option value="TEAM FJC" <?php if ($row['church'] == 'TEAM FJC') echo ' selected="selected"'; ?>>TEAM FJC</option>
+                                <option value="TEAM JTCC" <?php if ($row['church'] == 'TEAM JTCC') echo ' selected="selected"'; ?>>TEAM JTCC</option>
+                                <option value="TEAM GTC" <?php if ($row['church'] == 'TEAM GTC') echo ' selected="selected"'; ?>>TEAM GTC</option>
+                                <option value="TEAM GEC" <?php if ($row['church'] == 'TEAM GEC') echo ' selected="selected"'; ?>>TEAM GEC</option>
+                                <option value="TEAM PRAISE" <?php if ($row['church'] == 'TEAM PRAISE') echo ' selected="selected"'; ?>>TEAM PRAISE</option>
+                                <option value="TEAM LWCC" <?php if ($row['church'] == 'TEAM LWCC') echo ' selected="selected"'; ?>>TEAM LWCC</option>
+                                <option value="TEAM CCF" <?php if ($row['church'] == 'TEAM CCF') echo ' selected="selected"'; ?>>TEAM CCF</option>
+                                <option value="TEAM ZION" <?php if ($row['church'] == 'TEAM ZION') echo ' selected="selected"'; ?>>TEAM ZION</option>
+                                <option value="TEAM SHEPHERDS" <?php if ($row['church'] == 'TEAM SHEPHERDS') echo ' selected="selected"'; ?>>TEAM SHEPHERDS</option>
                             </select>
                         </div>
                     </div>
@@ -94,15 +83,15 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="inputPassword3" class="col-sm-3 col-form-label">Select Batch</label>
+                        <label for="inputPassword3" class="col-sm-3 col-form-label">Select Year Level</label>
                         <div class="col-sm-9">
-                            <select class="form-select" name="batch" value="<?php echo $row['batch']; ?>" required>
+                            <select class="form-select" name="year_level" required>
                                 <option selected="">Open this select menu</option>
-                                <option value="1" <?php if ($row['batch'] == '1') echo ' selected="selected"'; ?>>First</option>
-                                <option value="2" <?php if ($row['batch'] == '2') echo ' selected="selected"'; ?>>Second</option>
-                                <option value="3" <?php if ($row['batch'] == '3') echo ' selected="selected"'; ?>>Third</option>
-                                <option value="4" <?php if ($row['batch'] == '4') echo ' selected="selected"'; ?>>Fourth</option>
-                                <option value="5" <?php if ($row['batch'] == '5') echo ' selected="selected"'; ?>>Fifth</option>
+                                <option value="1" <?php if ($row['year_level'] == '1') echo ' selected="selected"'; ?>>First</option>
+                                <option value="2" <?php if ($row['year_level'] == '2') echo ' selected="selected"'; ?>>Second</option>
+                                <option value="3" <?php if ($row['year_level'] == '3') echo ' selected="selected"'; ?>>Third</option>
+                                <option value="4" <?php if ($row['year_level'] == '4') echo ' selected="selected"'; ?>>Fourth</option>
+                                <option value="5" <?php if ($row['year_level'] == '5') echo ' selected="selected"'; ?>>Fifth</option>
                             </select>
                         </div>
                     </div>

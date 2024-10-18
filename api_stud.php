@@ -2,10 +2,10 @@
 // Include PHPExcel
 require 'PHPExcel/PHPExcel.php';
 require 'PHPExcel/PHPExcel/IOFactory.php';
-// print_r($_POST);
 require "conn.php";
 session_start();
 
+// Check if the user is an admin
 if ($_SESSION['usertype'] != 'ADMIN') {
     session_destroy();
     header("location: login.php");
@@ -13,81 +13,111 @@ if ($_SESSION['usertype'] != 'ADMIN') {
 }
 
 if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
+    // Check if admin_id is set in the session
+    if (!isset($_SESSION['admin_id'])) {
+        $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
+            Admin ID not found in session.
+        </div>';
+        header("location: login.php"); // Redirect to login or handle accordingly
+        exit();
+    }
 
+    // Retrieve the admin_id
+    $admin_id = $_SESSION['admin_id'];
+
+    // Validate the admin_id exists in the admin table
+    $checkAdminQuery = "SELECT * FROM admin WHERE admin_id = '$admin_id'";
+    $adminResult = mysqli_query($conn, $checkAdminQuery);
+
+    if (mysqli_num_rows($adminResult) == 0) {
+        $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
+            Invalid Admin ID. Cannot add scholar.
+        </div>';
+        header("location: stud_details.php");
+        exit();
+    }
+
+    // Check if the request type is 'add'
     if (isset($_GET['type']) && $_GET['type'] == "add") {
-        $enrollmentno = mysqli_escape_string($conn, $_POST['enrollmentno']);
-        $studentname = mysqli_escape_string($conn, $_POST['studentname']);
+        $student_no = mysqli_escape_string($conn, $_POST['student_no']);
+        $student_name = mysqli_escape_string($conn, $_POST['name']);
         $semester = mysqli_escape_string($conn, $_POST['semester']);
-        $branch = mysqli_escape_string($conn, $_POST['branch']);
-        $rollno = mysqli_escape_string($conn, $_POST['rollno']);
-        $batch = mysqli_escape_string($conn, $_POST['batch']);
+        $church = mysqli_escape_string($conn, $_POST['church']);
+        $roll_no = mysqli_escape_string($conn, $_POST['roll_no']);
+        $year_level = mysqli_escape_string($conn, $_POST['year_level']);
         $password = mysqli_escape_string($conn, $_POST['password']);
 
-        $sql = "INSERT INTO `students`(`enrollment_no`, `name`, `semester`, `branch`, `roll_no`, `batch`, `password`) VALUES ('$enrollmentno','$studentname','$semester','$branch','$rollno','$batch','$password')";
+        // Insert into the scholars table, including admin_id
+        $sql = "INSERT INTO `scholars`(`student_no`, `name`, `semester`, `church`, `roll_no`, `year_level`, `password`, `admin_id`) 
+                VALUES ('$student_no','$student_name','$semester','$church','$roll_no','$year_level','$password', '$admin_id')";
+        
         $result = mysqli_query($conn, $sql);
+        
         if ($result) {
             $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
-        Student Added.
-        </div>';
+                Scholar Added.
+            </div>';
             header("location: stud_details.php");
             exit();
         } else {
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-        Something went wrong!.
-        </div>';
+                Something went wrong! Error: ' . mysqli_error($conn) . '.
+            </div>';
             header("location: stud_details.php");
             exit();
         }
     }
 
+    // Check if the request type is 'delete'
     if (isset($_GET['type']) && $_GET['type'] == "delete") {
-        $enroll = mysqli_escape_string($conn, $_GET['enroll']);
-
-        $sql = "DELETE FROM `students` WHERE enrollment_no='$enroll'";
+        $student_no = mysqli_escape_string($conn, $_GET['student_no']);
+    
+        $sql = "DELETE FROM `scholars` WHERE student_no='$student_no'";
+    
         $result = mysqli_query($conn, $sql);
         if ($result) {
             $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
-        Student Deleted.
-        </div>';
+                Scholar Deleted.
+            </div>';
             header("location: stud_details.php");
             exit();
         } else {
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-        Something went wrong!.
-        </div>';
+                Something went wrong! Error: ' . mysqli_error($conn) . '.
+            </div>';
             header("location: stud_details.php");
             exit();
         }
     }
 
+    // Check if the request type is 'update'
     if (isset($_GET['type']) && $_GET['type'] == "update") {
-        $enrollmentno = mysqli_escape_string($conn, $_POST['enrollmentno']);
+        $student_no = mysqli_escape_string($conn, $_POST['student_no']);
         $studentname = mysqli_escape_string($conn, $_POST['studentname']);
         $semester = mysqli_escape_string($conn, $_POST['semester']);
-        $branch = mysqli_escape_string($conn, $_POST['branch']);
-        $shift = mysqli_escape_string($conn, $_POST['shift']);
+        $church = mysqli_escape_string($conn, $_POST['church']);
         $rollno = mysqli_escape_string($conn, $_POST['rollno']);
-        $batch = mysqli_escape_string($conn, $_POST['batch']);
+        $year_level = mysqli_escape_string($conn, $_POST['year_level']);
         $password = mysqli_escape_string($conn, $_POST['password']);
 
-        $sql = "UPDATE `students` SET `name`='$studentname',`semester`='$semester',`branch`='$branch',`shift`='$shift',`roll_no`='$rollno',`batch`='$batch',`password`='$password' WHERE `enrollment_no`='$enrollmentno'";
+        $sql = "UPDATE `scholars` SET `name`='$studentname', `semester`='$semester', `church`='$church', `roll_no`='$rollno', `year_level`='$year_level', `password`='$password' WHERE `student_no`='$student_no'";
         $result = mysqli_query($conn, $sql);
         if ($result) {
             $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
-        Student Details Updated.
-        </div>';
+                Student Details Updated.
+            </div>';
             header("location: stud_details.php");
             exit();
         } else {
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-        Something went wrong!.
-        </div>';
+                Something went wrong! Error: ' . mysqli_error($conn) . '.
+            </div>';
             header("location: stud_details.php");
             exit();
         }
     }
 
-
+    // Check if the request type is 'bulk' and if a file is uploaded
     if (isset($_GET['type']) && $_GET['type'] == "bulk" && isset($_FILES['file'])) {
         // File upload
         $uploadDir = 'uploads/';
@@ -96,20 +126,17 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
         // Check file extension
         $fileExtension = pathinfo($uploadFile, PATHINFO_EXTENSION);
         if (!in_array($fileExtension, ['xls', 'xlsx'])) {
-            // die('Invalid file type. Please upload an Excel file.');
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-       Invalid file type. Please upload an Excel file.
-        </div>';
+                Invalid file type. Please upload an Excel file.
+            </div>';
             header("location: stud_details.php");
             exit();
         }
 
         // Move the uploaded file to the uploads directory
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
-
             // Expected headers
-            $expectedHeaders = ['enrollment', 'name', 'semester', 'branch', 'roll no', 'batch', 'password'];
-
+            $expectedHeaders = ['student_no', 'name', 'semester', 'church', 'roll_no', 'year_level', 'password'];
 
             try {
                 // Load the Excel file
@@ -128,34 +155,18 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
                     $headers[] = trim(strtolower($cell->getValue()));  // Trim and convert to lowercase
                 }
 
-                // Print the read headers for debugging
-                // echo "<pre>Read headers: ";
-                // print_r($headers);
-
                 // Validate headers
                 if ($headers !== $expectedHeaders) {
-                    // echo "Expected headers: ";
-                    // print_r($expectedHeaders);
-                    // die('Invalid file structure. Please ensure the Excel file has the correct headers in the correct order.');
                     $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-       Invalid file structure. Please ensure the Excel file has the correct headers in the correct order.
-        </div>';
+                        Invalid file structure. Please ensure the Excel file has the correct headers in the correct order.
+                    </div>';
                     header("location: stud_details.php");
                     exit();
                 }
 
                 // Prepare SQL statement
-                $stmt = $conn->prepare("INSERT INTO students (enrollment_no, name, semester, branch, roll_no, batch, password) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param(
-                    "isisiss",
-                    $enrollment,
-                    $name,
-                    $semester,
-                    $branch,
-                    $rollno,
-                    $batch,
-                    $password
-                );
+                $stmt = $conn->prepare("INSERT INTO scholars (student_no, name, semester, church, roll_no, year_level, password, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssisisss", $student_no, $name, $semester, $church, $rollno, $year_level, $password, $admin_id);
 
                 // Iterate through rows and columns
                 $firstRow = true;
@@ -170,56 +181,65 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] == true) {
 
                     $rowData = [];
                     foreach ($cellIterator as $cell) {
-                        $rowData[] = $cell->getValue();
+                        $rowData[] = $cell ? $cell->getValue() : null; // Check for empty cells
+                    }
+
+                    // Debug: Check what data is being read
+                    error_log(print_r($rowData, true)); // Log row data for debugging
+
+                    // Ensure rowData has enough elements
+                    if (count($rowData) < 7) {
+                        $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
+                            Invalid data in row. Please ensure all fields are filled out correctly.
+                        </div>';
+                        header("location: stud_details.php");
+                        exit();
                     }
 
                     // Assign values from row data
-                    $enrollment = $rowData[0];
-                    $name = $rowData[1];
-                    $semester = $rowData[2];
-                    $branch = $rowData[3];
-                    $rollno = $rowData[4];
-                    $batch = $rowData[5];
-                    $password = $rowData[6];
+                    $student_no = $rowData[0]; // student_no
+                    $name = $rowData[1]; // name
+                    $semester = $rowData[2]; // semester
+                    $church = $rowData[3]; // church
+                    $rollno = $rowData[4]; // roll_no
+                    $year_level = $rowData[5]; // year_level
+                    $password = $rowData[6]; // password
 
-                    // Execute SQL statement
-                    $stmt->execute();
+                    // Execute prepared statement
+                    if (!$stmt->execute()) {
+                        $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
+                            Something went wrong while inserting row: ' . mysqli_error($conn) . '.
+                        </div>';
+                        header("location: stud_details.php");
+                        exit();
+                    }
                 }
 
-                // Close statement and connection
-                $stmt->close();
-                $conn->close();
-
-                // echo "Data inserted successfully!";
                 $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
-        Data inserted successfully.
-        </div>';
+                    Scholars Added Successfully from the file.
+                </div>';
                 header("location: stud_details.php");
                 exit();
+
             } catch (Exception $e) {
-                // die('Error loading file "' . pathinfo($filePath, PATHINFO_BASENAME) . '": ' . $e->getMessage());
                 $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-       Error loading file.
-        </div>';
+                    Error processing file: ' . $e->getMessage() . '.
+                </div>';
                 header("location: stud_details.php");
                 exit();
             }
         } else {
-
             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-       File upload failed.
-        </div>';
+                File could not be uploaded.
+            </div>';
             header("location: stud_details.php");
             exit();
         }
-    } else {
-        $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-        Something went wrong! OR File Is Not Select.
-        </div>';
-        header("location: stud_details.php");
-        exit();
     }
+
 } else {
+    session_destroy();
     header("location: login.php");
     exit();
 }
+?>

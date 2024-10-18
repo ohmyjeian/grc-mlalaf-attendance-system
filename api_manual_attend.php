@@ -11,12 +11,12 @@ if ($_SESSION['usertype'] != 'ADMIN') {
 }
 
 
-if (isset($_POST['batch']) && isset($_POST['semester']) && isset($_POST['branch'])) {
-    $batch = mysqli_escape_string($conn, $_POST['batch']);
+if (isset($_POST['year_level']) && isset($_POST['semester']) && isset($_POST['church'])) {
+    $year_level = mysqli_escape_string($conn, $_POST['year_level']);
     $semester = mysqli_escape_string($conn, $_POST['semester']);
-    $branch = mysqli_escape_string($conn, $_POST['branch']);
+    $church = mysqli_escape_string($conn, $_POST['church']);
     $ip_address = mysqli_escape_string($conn, $_POST['clientIp']);
-    $subject_code = mysqli_escape_string($conn, $_POST['subject_code']);
+    $event_code = mysqli_escape_string($conn, $_POST['event_code']);
     $slot = mysqli_escape_string($conn, $_POST['slot']);
     $date = mysqli_escape_string($conn, $_POST['date']);
     $time = date('h:i:s a', strtotime(mysqli_escape_string($conn, $_POST['time'])));
@@ -26,20 +26,15 @@ if (isset($_POST['batch']) && isset($_POST['semester']) && isset($_POST['branch'
     $success = array();
     $failed = array();
 
-
-
     foreach ($students as $key => $value) {
-
-        $sql = "SELECT * FROM `students` WHERE `batch`='$batch' AND `enrollment_no`=$value AND `semester`='$semester'";
+        $sql = "SELECT * FROM `scholars` WHERE `year_level`='$year_level' AND `student_no`=$value AND `semester`='$semester'";
         $result = mysqli_query($conn, $sql);
 
         if ($result->num_rows == 1) {
-
-
-            $csql = "SELECT * FROM `attendance` WHERE `date`='$date' AND `enrollment_no`=$value AND `subject_code`=$subject_code AND `slot`=$slot AND `batch`='$batch'";
+            $csql = "SELECT * FROM `attendance` WHERE `date`='$date' AND `student_no`=$value AND `event_code`=$event_code AND `slot`=$slot AND `year_level`='$year_level'";
             $cres = mysqli_query($conn, $csql);
             if ($cres->num_rows == 0) {
-                $fsql = "INSERT INTO `attendance`(`enrollment_no`, `date`, `day`, `subject_code`, `slot`, `batch`, `branch`,`semester`,`time`,`ip_address`) VALUES ('$value','$date','$currentDay', '$subject_code','$slot','$batch','$branch','$semester','$time','$ip_address')";
+                $fsql = "INSERT INTO `attendance`(`student_no`, `date`, `day`, `event_code`, `slot`, `year_level`, `church`, `semester`, `time`, `ip_address`) VALUES ('$value','$date','$currentDay', '$event_code','$slot','$year_level','$church','$semester','$time','$ip_address')";
                 $fres = mysqli_query($conn, $fsql);
                 if ($fres) {
                     $success[$value] = "Attendance Marked!.";
@@ -50,8 +45,7 @@ if (isset($_POST['batch']) && isset($_POST['semester']) && isset($_POST['branch'
                 $failed[$value] = " Attendance Already Marked!.";
             }
         } else {
-
-            $failed[$value] = "This Batch & Semester Not Allocate to you!.";
+            $failed[$value] = "This Year Level & Semester Not Allocated to you!.";
         }
     }
 

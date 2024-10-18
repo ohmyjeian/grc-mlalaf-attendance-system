@@ -19,18 +19,16 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     </nav>
 </div>
 
-
 <!-- Blank Start -->
 <div class="container-fluid pt-4 px-4">
     <?php
-    if (isset($_GET['enroll'])) {
-        $enroll = mysqli_escape_string($conn, $_GET['enroll']);
-        $sql = "SELECT * FROM teachers WHERE id='$enroll'";
+    if (isset($_GET['id'])) {
+        $leader_id = mysqli_escape_string($conn, $_GET['id']);
+        $sql = "SELECT * FROM `leaders` WHERE `id`='$leader_id'";
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
     }
     ?>
-
 
     <div class="row bg-light rounded mx-0">
         <div class="col-12">
@@ -45,47 +43,68 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                     <div class="row mb-3">
                         <label for="inputPassword3" class="col-sm-3 col-form-label">Leader Name</label>
                         <div class="col-sm-9">
-                            <input type="text" name="teachername" class="form-control" value="<?php echo $row['name']; ?>">
+                            <input type="text" name="leadername" class="form-control" value="<?php echo $row['name']; ?>">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="inputPassword3" class="col-sm-3 col-form-label">Select Church Role</label>
                         <div class="col-sm-9">
-                            <select class="form-select" name="education" value="<?php echo $row['education']; ?>" required>
+                            <select class="form-select" name="church_role" required>
                                 <option selected="">Open this select menu</option>
-                                <option value="B.E/B.Tech" <?php if ($row['education'] == 'B.E/B.Tech') echo ' selected="selected"'; ?>>B.E/B.Tech</option>
-                                <option value="M.E/M.Tech" <?php if ($row['education'] == 'M.E/M.Tech') echo ' selected="selected"'; ?>>M.E/M.Tech</option>
-                                <option value="Ph.d" <?php if ($row['education'] == 'Ph.d') echo ' selected="selected"'; ?>>Ph.d</option>
+                                <option value="Pastor" <?php if ($row['church_role'] == 'Pastor') echo ' selected="selected"'; ?>>Pastor</option>
+                                <option value="Youth Pastor" <?php if ($row['church_role'] == 'Youth Pastor') echo ' selected="selected"'; ?>>Youth Pastor</option>
+                                <option value="Primary Leader" <?php if ($row['church_role'] == 'Primary Leader') echo ' selected="selected"'; ?>>Primary Leader</option>
+                                <option value="Youth Leader" <?php if ($row['church_role'] == 'Youth Leader') echo ' selected="selected"'; ?>>Youth Leader</option>
+                                <option value="Cell Leader" <?php if ($row['church_role'] == 'Cell Leader') echo ' selected="selected"'; ?>>Cell Leader</option>
+                                <option value="Worship Leader" <?php if ($row['church_role'] == 'Worship Leader') echo ' selected="selected"'; ?>>Worship Leader</option>
+                                <option value="Prayer Leader" <?php if ($row['church_role'] == 'Prayer Leader') echo ' selected="selected"'; ?>>Prayer Leader</option>
+                                <option value="Choir Member" <?php if ($row['church_role'] == 'Choir Member') echo ' selected="selected"'; ?>>Choir Member</option>
+                                <option value="Musician" <?php if ($row['church_role'] == 'Musician') echo ' selected="selected"'; ?>>Musician</option>
+                                <option value="Sound Technician" <?php if ($row['church_role'] == 'Sound Technician') echo ' selected="selected"'; ?>>Sound Technician</option>
+                                <option value="Lighting Technician" <?php if ($row['church_role'] == 'Lighting Technician') echo ' selected="selected"'; ?>>Lighting Technician</option>
+                                <option value="Media Technician" <?php if ($row['church_role'] == 'Media Technician') echo ' selected="selected"'; ?>>Media Technician</option>
+                                <option value="Video Operator" <?php if ($row['church_role'] == 'Video Operator') echo ' selected="selected"'; ?>>Video Operator</option>
+                                <option value="Graphic Designer" <?php if ($row['church_role'] == 'Graphic Designer') echo ' selected="selected"'; ?>>Graphic Designer</option>
+                                <option value="Usher" <?php if ($row['church_role'] == 'Usher') echo ' selected="selected"'; ?>>Usher</option>
+                                <option value="Hospitality Team Member" <?php if ($row['church_role'] == "Hospitality Team Member") echo ' selected="selected"'; ?>>Hospitality Team Member</option>
+                                <option value="Children's Ministry Worker" <?php if ($row['church_role'] == "Children's Ministry Worker") echo ' selected="selected"'; ?>>Children's Ministry Worker</option>
+                                <option value="Creative Arts Director" <?php if ($row['church_role'] == 'Creative Arts Director') echo ' selected="selected"'; ?>>Creative Arts Director</option>
+                                <option value="Social Media Manager" <?php if ($row['church_role'] == 'Social Media Manager') echo ' selected="selected"'; ?>>Social Media Manager</option>
+                                <option value="Website Administrator" <?php if ($row['church_role'] == 'Website Administrator') echo ' selected="selected"'; ?>>Website Administrator</option>
+                                <option value="Dance Team Member" <?php if ($row['church_role'] == 'Dance Team Member') echo ' selected="selected"'; ?>>Dance Team Member</option>
+                                <option value="Drama Team Member" <?php if ($row['church_role'] == 'Drama Team Member') echo ' selected="selected"'; ?>>Drama Team Member</option>
+                                <option value="Regular Attendee / Member" <?php if ($row['church_role'] == 'Regular Attendee / Member') echo ' selected="selected"'; ?>>Regular Attendee / Member</option>
                             </select>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="inputPassword3" class="col-sm-3 col-form-label">Church</label>
                         <div class="col-sm-9">
-                            <select class="form-select" name="branch" value="<?php echo $row['branch']; ?>" required>
-                            <option selected="">Open this select menu</option>
-                            <option value="TEAM MBBEM" <?php if ($row['branch'] == 'TEAM MBBEM') echo ' selected="selected"'; ?>>TEAM MBBEM</option>
-                            <option value="TEAM FJC" <?php if ($row['branch'] == 'TEAM FJC') echo ' selected="selected"'; ?>>TEAM FJC</option>
-                            <option value="TEAM JTCC" <?php if ($row['branch'] == 'TEAM JTCC') echo ' selected="selected"'; ?>>TEAM JTCC</option>
-                            <option value="TEAM GTC" <?php if ($row['branch'] == 'TEAM GTC') echo ' selected="selected"'; ?>>TEAM GTC</option>
-                            <option value="TEAM GEC" <?php if ($row['branch'] == 'TEAM GEC') echo ' selected="selected"'; ?>>TEAM GEC</option>
-                            <option value="TEAM PRAISE" <?php if ($row['branch'] == 'TEAM PRAISE') echo ' selected="selected"'; ?>>TEAM PRAISE</option>
-                            <option value="TEAM LWCC" <?php if ($row['branch'] == 'TEAM LWCC') echo ' selected="selected"'; ?>>TEAM LWCC</option>
-                            <option value="TEAM CCF" <?php if ($row['branch'] == 'TEAM CCF') echo ' selected="selected"'; ?>>TEAM CCF</option>
-                            <option value="TEAM ZION" <?php if ($row['branch'] == 'TEAM ZION') echo ' selected="selected"'; ?>>TEAM ZION</option>
-                            <option value="TEAM SHEPHERDS" <?php if ($row['branch'] == 'TEAM SHEPHERDS') echo ' selected="selected"'; ?>>TEAM SHEPHERDS</option>
+                            <select class="form-select" name="church" required>
+                                <option selected="">Open this select menu</option>
+                                <option value="TEAM MBBEM" <?php if ($row['church'] == 'TEAM MBBEM') echo ' selected="selected"'; ?>>TEAM MBBEM</option>
+                                <option value="TEAM FJC" <?php if ($row['church'] == 'TEAM FJC') echo ' selected="selected"'; ?>>TEAM FJC</option>
+                                <option value="TEAM JTCC" <?php if ($row['church'] == 'TEAM JTCC') echo ' selected="selected"'; ?>>TEAM JTCC</option>
+                                <option value="TEAM GTC" <?php if ($row['church'] == 'TEAM GTC') echo ' selected="selected"'; ?>>TEAM GTC</option>
+                                <option value="TEAM GEC" <?php if ($row['church'] == 'TEAM GEC') echo ' selected="selected"'; ?>>TEAM GEC</option>
+                                <option value="TEAM PRAISE" <?php if ($row['church'] == 'TEAM PRAISE') echo ' selected="selected"'; ?>>TEAM PRAISE</option>
+                                <option value="TEAM LWCC" <?php if ($row['church'] == 'TEAM LWCC') echo ' selected="selected"'; ?>>TEAM LWCC</option>
+                                <option value="TEAM CCF" <?php if ($row['church'] == 'TEAM CCF') echo ' selected="selected"'; ?>>TEAM CCF</option>
+                                <option value="TEAM ZION" <?php if ($row['church'] == 'TEAM ZION') echo ' selected="selected"'; ?>>TEAM ZION</option>
+                                <option value="TEAM SHEPHERDS" <?php if ($row['church'] == 'TEAM SHEPHERDS') echo ' selected="selected"'; ?>>TEAM SHEPHERDS</option>
                             </select>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="inputPassword3" class="col-sm-3 col-form-label">Select Designation</label>
                         <div class="col-sm-9">
-                            <select class="form-select" name="designation" value="<?php echo $row['designation']; ?>" required>
+                            <select class="form-select" name="designation" required>
                                 <option selected="">Open this select menu</option>
-                                <option value="Instructor" <?php if ($row['designation'] == 'Instructor') echo ' selected="selected"'; ?>>Instructor</option>
-                                <option value="Assistant Professor" <?php if ($row['designation'] == 'Assistant Professor') echo ' selected="selected"'; ?>>Assistant Professor</option>
-                                <option value="Associate Professor" <?php if ($row['designation'] == 'Associate Professor') echo ' selected="selected"'; ?>>Associate Professor</option>
-                                <option value="Professor" <?php if ($row['designation'] == 'Professor') echo ' selected="selected"'; ?>>Professor</option>
+                                <option value="Ministry Coordinator" <?php if ($row['designation'] == 'Ministry Coordinator') echo ' selected="selected"'; ?>>Ministry Coordinator</option>
+                                <option value="Media and Tech Coordinator" <?php if ($row['designation'] == 'Media and Tech Coordinator') echo ' selected="selected"'; ?>>Media and Tech Coordinator</option>
+                                <option value="Worship Leader" <?php if ($row['designation'] == 'Worship Leader') echo ' selected="selected"'; ?>>Worship Leader</option>
+                                <option value="Caregroup Leader" <?php if ($row['designation'] == 'Caregroup Leader') echo ' selected="selected"'; ?>>Caregroup Leader</option>
+                                <option value="Student Leader" <?php if ($row['designation'] == 'Student Leader') echo ' selected="selected"'; ?>>Student Leader</option>
                             </select>
                         </div>
                     </div>

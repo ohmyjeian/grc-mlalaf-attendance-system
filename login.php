@@ -5,7 +5,7 @@ require "conn.php";
 if (isset($_GET['type']) && $_GET['type'] == "admin") {
     $username = mysqli_escape_string($conn, $_POST['username']);
     $password = mysqli_escape_string($conn, $_POST['password']);
-    $sql = "SELECT * FROM users WHERE username='$username'";
+    $sql = "SELECT * FROM admin WHERE username='$username'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
 
@@ -13,6 +13,7 @@ if (isset($_GET['type']) && $_GET['type'] == "admin") {
         if (password_verify($password, $row['password'])) {
             if ($row['status'] == 1) {
                 if ($row['user_type'] == "ADMIN") {
+                    $_SESSION['admin_id'] = $row['admin_id'];
                     $_SESSION['username'] = $row['username'];
                     $_SESSION['usertype'] = $row['user_type'];
                     $_SESSION['logged'] = true;
@@ -20,41 +21,40 @@ if (isset($_GET['type']) && $_GET['type'] == "admin") {
                     exit();
                 } else {
                     $_SESSION['msg'] = '<div class="alert alert-danger" role="alert">
-                 Invalid login credentials!.
-            </div>';
+                    Invalid login credentials!.
+                    </div>';
                     header("location: login.php");
                     exit();
                 }
             } else {
                 $_SESSION['msg'] = '<div class="alert alert-danger" role="alert">
-            Invalid login credentials!.
-        </div>';
+                Invalid login credentials!.
+                </div>';
                 header("location: login.php");
                 exit();
             }
         } else {
             $_SESSION['msg'] = '<div class="alert alert-danger" role="alert">
             Invalid login credentials!.
-        </div>';
+            </div>';
             header("location: login.php");
             exit();
         }
     }
-} else if (isset($_GET['type']) && $_GET['type'] == "teacher") {
-    $teacherid = mysqli_escape_string($conn, $_POST['teacherid']);
+} else if (isset($_GET['type']) && $_GET['type'] == "leader") {
+    $leader_id = mysqli_escape_string($conn, $_POST['leader_id']);
     $password = mysqli_escape_string($conn, $_POST['password']);
-    $sql = "SELECT * FROM teachers WHERE id='$teacherid' AND password='$password'";
+    $sql = "SELECT * FROM leaders WHERE id='$leader_id' AND password='$password'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
 
-
     if ($result->num_rows == 1) {
         $_SESSION['username'] = $row['name'];
-        $_SESSION['teacher_id'] = $row['id'];
-        $_SESSION['usertype'] = "TEACHER";
+        $_SESSION['leader_id'] = $row['id'];
+        $_SESSION['usertype'] = "LEADER";
         $_SESSION['logged'] = true;
         header("location: ./");
-        exit();;
+        exit();
     } else {
         $_SESSION['msg'] = '<div class="alert alert-danger" role="alert">
                 Invalid login credentials!.
@@ -62,19 +62,19 @@ if (isset($_GET['type']) && $_GET['type'] == "admin") {
         header("location: login.php");
         exit();
     }
-} else if (isset($_GET['type']) && $_GET['type'] == "student") {
-    $enroll = mysqli_escape_string($conn, $_POST['enroll']);
+} else if (isset($_GET['type']) && $_GET['type'] == "scholar") {
+    $student_no = mysqli_escape_string($conn, $_POST['student_no']);
     $password = mysqli_escape_string($conn, $_POST['password']);
-    $sql = "SELECT * FROM students WHERE enrollment_no=$enroll AND password='$password'";
+    $sql = "SELECT * FROM scholars WHERE student_no='$student_no' AND password='$password'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
 
-
     if ($result->num_rows == 1) {
         $_SESSION['username'] = $row['name'];
-        $_SESSION['enrollment_no'] = $row['enrollment_no'];
-        $_SESSION['usertype'] = "STUDENT";
+        $_SESSION['student_no'] = $row['student_no'];
+        $_SESSION['usertype'] = "SCHOLAR";
         $_SESSION['logged'] = true;
+        $_SESSION['profile_pic'] = $row['pic']; 
         header("location: ./");
         exit();
     } else {
@@ -178,7 +178,7 @@ if (isset($_GET['type']) && $_GET['type'] == "admin") {
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" onchange="myFunction()" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="student">
-                                <label class="form-check-label" for="inlineRadio3">Student</label>
+                                <label class="form-check-label" for="inlineRadio3">Scholar</label>
                             </div>
                         </div>
 
@@ -202,10 +202,10 @@ if (isset($_GET['type']) && $_GET['type'] == "admin") {
                         </form>
                         <!-- End Admin login Form -->
 
-                        <!-- Teacher login Form -->
-                        <form id="form_teacher" action="login.php?type=teacher" method="post" hidden="true">
+                        <!-- Leader login Form -->
+                        <form id="form_leader" action="login.php?type=leader" method="post" hidden="true">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput" name="teacherid" placeholder="name123">
+                                <input type="text" class="form-control" id="floatingInput" name="leader_id" placeholder="name123">
                                 <label for="floatingInput">Leader ID</label>
                             </div>
                             <div class="form-floating mb-4">
@@ -220,12 +220,12 @@ if (isset($_GET['type']) && $_GET['type'] == "admin") {
                             </div>
                             <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign In</button>
                         </form>
-                        <!-- End Teacher login Form -->
+                        <!-- End Leader login Form -->
 
-                        <!-- Student login Form -->
-                        <form id="form_student" action="login.php?type=student" method="post" hidden="true">
+                        <!-- Scholar login Form -->
+                        <form id="form_scholar" action="login.php?type=scholar" method="post" hidden="true">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput" name="enroll" placeholder="name123">
+                                <input type="text" class="form-control" id="floatingInput" name="student_no" placeholder="name123">
                                 <label for="floatingInput">Student No</label>
                             </div>
                             <div class="form-floating mb-4">
@@ -240,7 +240,7 @@ if (isset($_GET['type']) && $_GET['type'] == "admin") {
                             </div>
                             <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign In</button>
                         </form>
-                        <!-- End Student login Form -->
+                        <!-- End Scholar login Form -->
 
                         <?php
                         if (isset($_SESSION['msg'])) {
@@ -269,21 +269,20 @@ if (isset($_GET['type']) && $_GET['type'] == "admin") {
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
 
-
     <script>
         function myFunction() {
             if (document.getElementById("inlineRadio1").checked) {
                 $('#form_admin').removeAttr('hidden');
-                $('#form_teacher').attr("hidden", true);
-                $('#form_student').attr("hidden", true);
+                $('#form_leader').attr("hidden", true);
+                $('#form_scholar').attr("hidden", true);
             } else if (document.getElementById("inlineRadio2").checked) {
                 $('#form_admin').attr("hidden", true);
-                $('#form_teacher').removeAttr('hidden');
-                $('#form_student').attr("hidden", true);
+                $('#form_leader').removeAttr('hidden');
+                $('#form_scholar').attr("hidden", true);
             } else if (document.getElementById("inlineRadio3").checked) {
                 $('#form_admin').attr("hidden", true);
-                $('#form_teacher').attr("hidden", true);
-                $('#form_student').removeAttr('hidden');
+                $('#form_leader').attr("hidden", true);
+                $('#form_scholar').removeAttr('hidden');
             }
         }
     </script>

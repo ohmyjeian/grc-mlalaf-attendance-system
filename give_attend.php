@@ -2,14 +2,14 @@
 require('header.php');
 require('conn.php');
 
-
-if ($_SESSION['usertype'] != 'STUDENT') {
+if ($_SESSION['usertype'] != 'SCHOLAR') { 
     session_destroy();
     header("location: login.php");
     exit();
 }
 
 ?>
+
 <style>
     .vid {
         border: solid 1px blueviolet;
@@ -106,7 +106,6 @@ if ($_SESSION['usertype'] != 'STUDENT') {
             clientIp = data.ip;
         });
 
-
         var scanner = new Instascan.Scanner({
             video: document.getElementById('preview'),
             scanPeriod: 5,
@@ -161,6 +160,7 @@ if ($_SESSION['usertype'] != 'STUDENT') {
         }
     }
 </script>
+
 <?php
 require('footer.php');
 ?>

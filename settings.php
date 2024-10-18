@@ -32,24 +32,24 @@ require('conn.php');
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th scope="col">Campus Location</th>
+                                <th scope="col">Campus Location</th> 
                                 <th scope="col">Latitude </th>
                                 <th scope="col">Longitude</th>
-                                <th scope="col">Covarage Area</th>
+                                <th scope="col">Coverage Area</th> 
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            $settingsql = "SELECT * FROM `settings` WHERE `id`='1'";
+                            $settingsql = "SELECT * FROM `settings` WHERE `id`='1'"; 
                             $settingresult = mysqli_query($conn, $settingsql);
                             $settingrow = mysqli_fetch_assoc($settingresult);
                             ?>
                             <tr>
-                                <td><?php echo $settingrow['location']; ?></td>
+                                <td><?php echo $settingrow['location']; ?></td> 
                                 <td><?php echo $settingrow['lat']; ?></td>
                                 <td><?php echo $settingrow['lon']; ?></td>
-                                <td><?php echo $settingrow['covarage']; ?> KM</td>
+                                <td><?php echo $settingrow['coverage']; ?> KM</td> 
                                 <td><button type="button" onclick="updateSetting()" class="btn btn-square btn-outline-danger btn-sm"><i class="fas fa-edit"></i></button></td>
                             </tr>
                         </tbody>

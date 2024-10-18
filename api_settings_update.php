@@ -12,13 +12,12 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
         <ol class="breadcrumb mb-0 p-1 rounded-4" style="background: #eee;">
             <li class="breadcrumb-item">Home</li>
-            <li class="breadcrumb-item">Teachers</li>
+            <li class="breadcrumb-item">Leaders</li>
             <li class="breadcrumb-item">Details</li>
             <li class="breadcrumb-item active" aria-current="page">Update</li>
         </ol>
     </nav>
 </div>
-
 
 <!-- Blank Start -->
 <div class="container-fluid pt-4 px-4">
@@ -27,7 +26,6 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
     ?>
-
 
     <div class="row bg-light rounded mx-0">
         <div class="col-12">
@@ -52,7 +50,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="inputPassword3" class="col-sm-3 col-form-label">Covarage</label>
+                        <label for="inputPassword3" class="col-sm-3 col-form-label">Coverage</label>
                         <div class="col-sm-9">
                             <input type="text" name="covarage" class="form-control" value="<?php echo $row['covarage']; ?>">
                             <span class="text-success fs-6 d-block">*Note: How many area are available for students to give their attendance.</span>
@@ -69,7 +67,5 @@ if ($_SESSION['usertype'] != 'ADMIN') {
 </div>
 <!-- Blank End -->
 
-
 <?php
 require('footer.php');
-?>

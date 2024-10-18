@@ -2,30 +2,29 @@
 require('header.php');
 require('conn.php');
 
-
-if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']) && isset($_GET['semester'])) {
-    $subject_code = $_GET['subject_code'];
+if (isset($_GET['event_code']) && isset($_GET['slot']) && isset($_GET['year_level']) && isset($_GET['semester'])) { 
+    $event_code = $_GET['event_code']; 
     $slot = $_GET['slot'];
-    $batch = $_GET['batch'];
+    $year_level = $_GET['year_level']; 
     // $currentDay = $_GET['day'];
     $semester = $_GET['semester'];
-    $branch = $_GET['branch'];
+    $church = $_GET['church']; 
 
     $currentDate = date('d-m-Y');
     $currentDay = $_GET['day'];
     $currentTime = date('h:i:s a', time());
 
-    $fssql = "SELECT * FROM `subjects` WHERE `subject_code`=" . $subject_code;
+    $fssql = "SELECT * FROM `events` WHERE `event_code`=" . $event_code; 
     $fsresult = mysqli_query($conn, $fssql);
     $fsrow = mysqli_fetch_assoc($fsresult);
 
-    $sql = "SELECT * FROM `timetable` WHERE `subject_code`='$subject_code' AND `semester`='$semester' AND `branch`='$branch' AND `day`='$currentDay' AND `slot`='$slot' AND `batch`='$batch'";
+    $sql = "SELECT * FROM `timetable` WHERE `event_code`='$event_code' AND `semester`='$semester' AND `church`='$church' AND `day`='$currentDay' AND `slot`='$slot' AND `year_level`='$year_level'"; 
 
     $result = mysqli_query($conn, $sql);
 
     $currentTimestamp = time();
     if ($result->num_rows == 1) {
-        $studSQl = "SELECT * FROM `students` WHERE `semester`='$semester' AND `branch`='$branch' AND `batch`='$batch'";
+        $studSQl = "SELECT * FROM `scholars` WHERE `semester`='$semester' AND `church`='$church' AND `year_level`='$year_level'"; 
         $studRes = mysqli_query($conn, $studSQl);
     } else {
         //     $_SESSION['msg'] = '<div class="alert alert-danger" role="alert">
@@ -33,7 +32,7 @@ if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']
         // </div>';
 
         echo '<script>
-        alert(" Lecture Not Allocated On ' . $currentDay . '!.");
+        alert(" Event Not Allocated On ' . $currentDay . '!.");
         window.location.href ="manual_attend.php";
     </script>';
         // header("location: manual_attend.php");
@@ -50,7 +49,6 @@ if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']
         </ol>
     </nav>
 </div>
-
 
 <!-- Blank Start -->
 <div class="container-fluid pt-4 px-4">
@@ -79,11 +77,10 @@ if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']
                             <td>Slot</td>
                         </tr>
                         <tr>
-
                             <td><?php echo $fsrow['name']; ?></td>
-                            <td><?php echo $batch; ?></td>
+                            <td><?php echo $year_level; ?></td>
                             <td><?php echo $semester; ?></td>
-                            <td><?php echo $branch; ?></td>
+                            <td><?php echo $church; ?></td>
                             <td><?php echo $currentDay; ?></td>
                             <td><?php echo $slot; ?></td>
                         </tr>
@@ -91,49 +88,49 @@ if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']
                 </table>
 
                 <form action="api_manual_attend.php" method="post">
-                    <input class="form-control" type="text" name="batch" value="<?php echo $batch; ?>" hidden>
-                    <input class="form-control" type="text" name="semester" value="<?php echo $semester; ?>" hidden>
-                    <input class="form-control" type="text" name="branch" value="<?php echo $branch; ?>" hidden>
-                    <input class="form-control" type="text" name="slot" value="<?php echo $slot; ?>" hidden>
-                    <input class="form-control" type="text" name="subject_code" value="<?php echo $subject_code; ?>" hidden>
-                    <input class="form-control" type="text" id="currentDay" name="currentDay" value="<?php echo $currentDay; ?>" readonly hidden>
-                    <input class="form-control" type="text" id="clientIp" name="clientIp" readonly hidden>
-                    <div class="mb-3">
-                        <label for="">Select Date</label>
-                        <input class="form-control" type="date" name="date" required>
-                    </div>
-                    <p class="text-danger">*Please remember the following text: 'Select the date that matches the day of the week mentioned above.</p>
-                    <div class="mb-3">
-                        <label for="">Select Time</label>
-                        <input class="form-control" type="time" name="time" required>
-                    </div>
+                <input class="form-control" type="text" name="year_level" value="<?php echo $batch; ?>" hidden> 
+                <input class="form-control" type="text" name="semester" value="<?php echo $semester; ?>" hidden>
+                <input class="form-control" type="text" name="church" value="<?php echo $branch; ?>" hidden>
+                <input class="form-control" type="text" name="slot" value="<?php echo $slot; ?>" hidden>
+                <input class="form-control" type="text" name="event_code" value="<?php echo $subject_code; ?>" hidden> 
+                <input class="form-control" type="text" id="currentDay" name="currentDay" value="<?php echo $currentDay; ?>" readonly hidden>
+                <input class="form-control" type="text" id="clientIp" name="clientIp" readonly hidden>
+                <div class="mb-3">
+                    <label for="">Select Date</label>
+                    <input class="form-control" type="date" name="date" required>
+                </div>
+                <p class="text-danger">*Please remember the following text: 'Select the date that matches the day of the week mentioned above.</p>
+                <div class="mb-3">
+                    <label for="">Select Time</label>
+                    <input class="form-control" type="time" name="time" required>
+                </div>
 
-                    <table class="table table-bordered text-center">
-                        <thead>
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">Mark Attendance</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Student No</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        while ($studrow = mysqli_fetch_assoc($studRes)) {
+                        ?>
                             <tr>
-                                <th scope="col">Mark Attendance</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Student No</th>
+                                <td>
+                                    <input class="form-check-input" type="checkbox" name="students[]" value="<?php echo $studrow['student_no']; ?>"> 
+                                </td>
+                                <td><?php echo $studrow['name']; ?></td>
+                                <td><?php echo $studrow['student_no']; ?></td> 
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            while ($studrow = mysqli_fetch_assoc($studRes)) {
-                            ?>
-                                <tr>
-                                    <td>
-                                        <input class="form-check-input" type="checkbox" name="students[]" value="<?php echo $studrow['enrollment_no']; ?>">
-                                    </td>
-                                    <td><?php echo $studrow['name']; ?></td>
-                                    <td><?php echo $studrow['enrollment_no']; ?></td>
-                                </tr>
-                            <?php
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </form>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
             </div>
         </div>
 

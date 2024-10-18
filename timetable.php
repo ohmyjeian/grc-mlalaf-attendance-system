@@ -18,7 +18,6 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     </nav>
 </div>
 
-
 <!-- Blank Start -->
 <div class="container-fluid pt-4 px-4">
     <div class="text-center w-100">
@@ -41,8 +40,8 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         <p>View Time Table</p>
                     </div>
                     <div class="col-auto">
-                        <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-                        <select class="form-select" name="branch" required>
+                        <label class="visually-hidden" for="autoSizingSelect">Church</label>
+                        <select class="form-select" name="church" required>
                             <option value="">Select Church</option>
                             <option value="TEAM MBBEM">TEAM MBBEM</option>
                             <option value="TEAM FJC">TEAM FJC</option>
@@ -57,7 +56,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         </select>
                     </div>
                     <div class="col-auto">
-                        <label class="visually-hidden" for="autoSizingSelect">Preference</label>
+                        <label class="visually-hidden" for="autoSizingSelect">Semester</label>
                         <select class="form-select" name="semester" id="autoSizingSelect">
                             <option value="">Select Semester</option>
                             <option value="1">First</option>
@@ -65,8 +64,8 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         </select>
                     </div>
                     <div class="col-auto">
-                        <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-                        <select class="form-select" name="batch" id="autoSizingSelect">
+                        <label class="visually-hidden" for="autoSizingSelect">Year Level</label>
+                        <select class="form-select" name="year_level" id="autoSizingSelect">
                             <option value="">Select Year Level</option>
                             <option value="1">First</option>
                             <option value="2">Second</option>
@@ -76,12 +75,10 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         </select>
                     </div>
                     <div class="col-auto">
-                        <label class="visually-hidden" for="autoSizingSelect">Preference</label>
+                        <label class="visually-hidden" for="autoSizingSelect">Academic Year</label>
                         <select class="form-select" name="academic" id="autoSizingSelect">
                             <option value="">Select Academic Year</option>
-                            <option value="2022-23">2022-23</option>
-                            <option value="2023-24">2023-24</option>
-                            <option value="2024-25">2024-25</option>
+                            <option value="2024-2025">2024-2025</option>
                         </select>
                     </div>
                     <div class="col-auto">
@@ -89,19 +86,20 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                     </div>
                 </form>
 
+
                 <?php
-                if (isset($_GET['batch']) && isset($_GET['semester']) && isset($_GET['academic']) && isset($_GET['branch'])) {
+                if (isset($_GET['year_level']) && isset($_GET['semester']) && isset($_GET['academic']) && isset($_GET['church'])) {
                 ?>
 
-                    <h6 class="mb-3 text-center mt-3 text-danger">Time Table Details : Academic Year-[<?php echo $_GET['academic']; ?>],Branch-[<?php echo $_GET['branch']; ?>] , Batch-[<?php echo $_GET['batch']; ?>], Semester-[<?php echo $_GET['semester']; ?>]</h6>
+                    <h6 class="mb-3 text-center mt-3 text-danger">Time Table Details : Academic Year-[<?php echo $_GET['academic']; ?>], Church-[<?php echo $_GET['church']; ?>] , Year Level-[<?php echo $_GET['year_level']; ?>], Semester-[<?php echo $_GET['semester']; ?>]</h6>
 
                     <?php
                     $semester = mysqli_escape_string($conn, $_GET['semester']);
-                    $batch = mysqli_escape_string($conn, $_GET['batch']);
+                    $year_level = mysqli_escape_string($conn, $_GET['year_level']);
                     $academic = mysqli_escape_string($conn, $_GET['academic']);
-                    $branch = mysqli_escape_string($conn, $_GET['branch']);
-                    $sql = "SELECT * FROM `timetable` WHERE `academic_year`='$academic' AND  `branch`='$branch' AND `semester`='$semester' AND `batch`='$batch'";
-                    $sqlslot = "SELECT DISTINCT `slotlabel` FROM `timetable` WHERE `academic_year`='$academic' AND  `branch`='$branch' AND `semester`='$semester' AND `batch`='$batch'";
+                    $church = mysqli_escape_string($conn, $_GET['church']);
+                    $sql = "SELECT * FROM `timetable` WHERE `academic_year`='$academic' AND `church`='$church' AND `semester`='$semester' AND `year_level`='$year_level'";
+                    $sqlslot = "SELECT DISTINCT `slotlabel` FROM `timetable` WHERE `academic_year`='$academic' AND `church`='$church' AND `semester`='$semester' AND `year_level`='$year_level'";
                     $result1 = mysqli_query($conn, $sqlslot);
                     $result2 = mysqli_query($conn, $sql);
 
@@ -112,7 +110,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
 
                     $timetable = [];
                     while ($row = mysqli_fetch_assoc($result2)) {
-                        $timetable[$row['day']][] = $row['subject_code'];
+                        $timetable[$row['day']][] = $row['event_code'];
                     }
 
                     ?>
@@ -139,11 +137,11 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                         <td><?php echo $day; ?></td>
                                         <?php for ($i = 0; $i < $slotCount; $i++) : ?>
                                             <td><?php
-                                                $subjectCode =  isset($dayData[$i]) ? $dayData[$i] : '';
-                                                $subjectSQL = "SELECT * FROM `subjects` WHERE `subject_code`=$subjectCode";
-                                                $subjectRes = mysqli_query($conn, $subjectSQL);
-                                                $subjectRow = mysqli_fetch_assoc($subjectRes);
-                                                echo $subjectRow['name'];
+                                                $eventCode =  isset($dayData[$i]) ? $dayData[$i] : '';
+                                                $eventSQL = "SELECT * FROM `events` WHERE `event_code`='$eventCode'";
+                                                $eventRes = mysqli_query($conn, $eventSQL);
+                                                $eventRow = mysqli_fetch_assoc($eventRes);
+                                                echo $eventRow['name'];
                                                 ?></td>
                                         <?php endfor; ?>
                                     </tr>
@@ -180,16 +178,14 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                     <div class="col-sm-9">
                                         <select class="form-select" name="academicyear" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
-                                            <option value="2022-23">2022-23</option>
-                                            <option value="2023-24">2023-24</option>
-                                            <option value="2024-25">2024-25</option>
+                                            <option value="2024-2025">2024-2025</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Select Church</label>
                                     <div class="col-sm-9">
-                                        <select class="form-select" name="branch" id="floatingSelect" aria-label="Floating label select example" required>
+                                        <select class="form-select" name="church" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
                                             <option value="TEAM MBBEM">TEAM MBBEM</option>
                                             <option value="TEAM FJC">TEAM FJC</option>
@@ -205,7 +201,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Semeter</label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Semester</label>
                                     <div class="col-sm-9">
                                         <select class="form-select" name="semester" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
@@ -217,7 +213,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                 <div class="row mb-3">
                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Select Year Level</label>
                                     <div class="col-sm-9">
-                                        <select class="form-select" name="batch" id="floatingSelect" aria-label="Floating label select example" required>
+                                        <select class="form-select" name="year_level" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
                                             <option value="1">First</option>
                                             <option value="2">Second</option>
@@ -232,14 +228,14 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                 <input type="text" class="form-control form-control-sm" placeholder="Slot Label" id="slotlabelinput">
                                 <button class="btn btn-dark btn-sm" onclick="addslot()" type="button">Add Slot</button>
                             </div>
-                            <p class="text-danger">*Note: Do not give same label.</p>
+                            <p class="text-danger">*Note: Do not give the same label.</p>
                             <div class="table-responsive">
                                 <table class="table table-borderless text-center">
                                     <thead>
                                         <tr id="slotlabelbox">
                                             <th></th>
 
-                                        </tr>
+                                            </tr>
                                     </thead>
                                     <tbody>
                                         <tr id="mondaySlotsBox">
@@ -302,7 +298,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                 <div class="row mb-3">
                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Select Church</label>
                                     <div class="col-sm-9">
-                                        <select class="form-select" name="branch" id="floatingSelect" aria-label="Floating label select example" required>
+                                        <select class="form-select" name="church" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
                                             <option value="TEAM MBBEM">TEAM MBBEM</option>
                                             <option value="TEAM FJC">TEAM FJC</option>
@@ -320,16 +316,14 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                 <div class="row mb-3">
                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Select Academic Year</label>
                                     <div class="col-sm-9">
-                                        <select class="form-select" name="academicyear" id="floatingSelect" aria-label="Floating label select example" required>
+                                        <select class="form-select" name="academic_year" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
-                                            <option value="2022-23">2022-23</option>
-                                            <option value="2023-24">2023-24</option>
-                                            <option value="2024-25">2024-25</option>
+                                            <option value="2024-2025">2024-2025</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Semeter</label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Select Semester</label>
                                     <div class="col-sm-9">
                                         <select class="form-select" name="semester" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
@@ -341,7 +335,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                 <div class="row mb-3">
                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Select Year Level</label>
                                     <div class="col-sm-9">
-                                        <select class="form-select" name="batch" id="floatingSelect" aria-label="Floating label select example" required>
+                                        <select class="form-select" name="year_level" id="floatingSelect" aria-label="Floating label select example" required>
                                             <option value="">Open this select menu</option>
                                             <option value="1">First</option>
                                             <option value="2">Second</option>
@@ -379,11 +373,11 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                         <select class="form-select" name="Monday[]" id="floatingSelect" aria-label="Floating label select example" required>
                                                             <option value="">Select Event</option>
                                                             <?php
-                                                            $tsql = "SELECT * FROM subjects";
+                                                            $tsql = "SELECT * FROM events"; 
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['subject_code']; ?>"><?php echo $trow['name']; ?></option>
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
                                                             <?php
                                                             }
                                                             ?>
@@ -398,11 +392,11 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                         <select class="form-select" name="Tuesday[]" id="floatingSelect" aria-label="Floating label select example" required>
                                                             <option value="">Select Event</option>
                                                             <?php
-                                                            $tsql = "SELECT * FROM subjects";
+                                                            $tsql = "SELECT * FROM events"; 
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['subject_code']; ?>"><?php echo $trow['name']; ?></option>
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
                                                             <?php
                                                             }
                                                             ?>
@@ -417,11 +411,11 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                         <select class="form-select" name="Wednesday[]" id="floatingSelect" aria-label="Floating label select example" required>
                                                             <option value="">Select Event</option>
                                                             <?php
-                                                            $tsql = "SELECT * FROM subjects";
+                                                            $tsql = "SELECT * FROM events"; 
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['subject_code']; ?>"><?php echo $trow['name']; ?></option>
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
                                                             <?php
                                                             }
                                                             ?>
@@ -436,11 +430,11 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                         <select class="form-select" name="Thursday[]" id="floatingSelect" aria-label="Floating label select example" required>
                                                             <option value="">Select Event</option>
                                                             <?php
-                                                            $tsql = "SELECT * FROM subjects";
+                                                            $tsql = "SELECT * FROM events";
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['subject_code']; ?>"><?php echo $trow['name']; ?></option>
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
                                                             <?php
                                                             }
                                                             ?>
@@ -455,11 +449,11 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                         <select class="form-select" name="Friday[]" id="floatingSelect" aria-label="Floating label select example" required>
                                                             <option value="">Select Event</option>
                                                             <?php
-                                                            $tsql = "SELECT * FROM subjects";
+                                                            $tsql = "SELECT * FROM events"; 
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['subject_code']; ?>"><?php echo $trow['name']; ?></option>
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
                                                             <?php
                                                             }
                                                             ?>
@@ -474,11 +468,11 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                         <select class="form-select" name="Saturday[]" id="floatingSelect" aria-label="Floating label select example" required>
                                                             <option value="">Select Event</option>
                                                             <?php
-                                                            $tsql = "SELECT * FROM subjects";
+                                                            $tsql = "SELECT * FROM events"; 
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['subject_code']; ?>"><?php echo $trow['name']; ?></option>
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
                                                             <?php
                                                             }
                                                             ?>

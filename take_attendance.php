@@ -2,19 +2,16 @@
 require('header.php');
 require('conn.php');
 
-if ($_SESSION['usertype'] != 'TEACHER') {
+if ($_SESSION['usertype'] != 'LEADER') { 
     session_destroy();
     header("location: login.php");
     exit();
 }
 
-
-$teacher_id = $_SESSION['teacher_id'];
-$teacher_sql = "SELECT * FROM teachers WHERE `id`=$teacher_id";
-$teacher_res = mysqli_query($conn, $teacher_sql);
-$teacher_row = mysqli_fetch_assoc($teacher_res);
-
-// print_r($teacher_row['branch']);
+$leader_id = $_SESSION['leader_id']; 
+$leader_sql = "SELECT * FROM leaders WHERE `id` = $leader_id"; 
+$leader_res = mysqli_query($conn, $leader_sql);
+$leader_row = mysqli_fetch_assoc($leader_res);
 ?>
 <div class="container pt-3 px-4 m-0">
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
@@ -25,7 +22,6 @@ $teacher_row = mysqli_fetch_assoc($teacher_res);
         </ol>
     </nav>
 </div>
-
 
 <!-- Blank Start -->
 <div class="container-fluid pt-4 px-4">
@@ -47,31 +43,29 @@ $teacher_row = mysqli_fetch_assoc($teacher_res);
                         <p>View Time Table</p>
                     </div>
                     <div class="col-auto">
-                        <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-                        <select class="form-select" name="semester" id="autoSizingSelect">
+                        <label class="visually-hidden" for="semesterSelect">Semester</label>
+                        <select class="form-select" name="semester" id="semesterSelect">
                             <option value="">Select Semester</option>
                             <option value="1">First</option>
                             <option value="2">Second</option>
                         </select>
                     </div>
                     <div class="col-auto">
-                        <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-                        <select class="form-select" name="batch" id="autoSizingSelect">
+                        <label class="visually-hidden" for="yearLevelSelect">Year Level</label>
+                        <select class="form-select" name="year_level" id="yearLevelSelect"> 
                             <option value="">Select Year Level</option>
                             <option value="1">First</option>
                             <option value="2">Second</option>
                             <option value="3">Third</option>
-                            <option value="4">Fourt</option>
+                            <option value="4">Fourth</option> 
                             <option value="5">Fifth</option>
                         </select>
                     </div>
                     <div class="col-auto">
-                        <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-                        <select class="form-select" name="academic" id="autoSizingSelect">
+                        <label class="visually-hidden" for="academicSelect">Academic Year</label>
+                        <select class="form-select" name="academic" id="academicSelect">
                             <option value="">Select Academic Year</option>
-                            <option value="2022-23">2022-23</option>
-                            <option value="2023-24">2023-24</option>
-                            <option value="2024-25">2024-25</option>
+                            <option value="2024-2025">2024-2025</option>
                         </select>
                     </div>
                     <div class="col-auto">
@@ -80,80 +74,14 @@ $teacher_row = mysqli_fetch_assoc($teacher_res);
                 </form>
 
                 <?php
-                if (isset($_GET['batch']) && isset($_GET['semester']) && isset($_GET['academic'])) {
-                ?>
-
-                    <h6 class="mb-3 text-center mt-3 text-danger">Time Table Details : Academic Year-[<?php echo $_GET['academic']; ?>], Batch-[<?php echo $_GET['batch']; ?>], Semester-[<?php echo $_GET['semester']; ?>]</h6>
-                    <!-- <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col"></th>
-                                    <th scope="col">Slot 1</th>
-                                    <th scope="col">Slot 2</th>
-                                    <th scope="col">Slot 3</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $semester = $_GET['semester'];
-                                $batch = $_GET['batch'];
-                                $academic = $_GET['academic'];
-                                $sql = "SELECT * FROM `timetable` WHERE `academic_year`='$academic' AND `semester`='$semester' AND `batch`='$batch' AND `branch`='" . $teacher_row['branch'] . "'";
-                                // echo "<pre>";
-                                $result = mysqli_query($conn, $sql);
-                                $daychanger = 1;
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    // print_r($result);
-                                    // echo $daychanger;
-                                    if ($daychanger == 1) {
-                                ?>
-                                        <tr>
-                                            <td><?php echo $row['day']; ?></td>
-
-                                        <?php
-                                    }
-
-                                    $fssql = "SELECT * FROM `subjects` WHERE `subject_code`=" . $row['subject_code'];
-                                    $fsresult = mysqli_query($conn, $fssql);
-                                    $fsrow = mysqli_fetch_assoc($fsresult);
-                                    echo ' <td>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <p>' . $fsrow['name'];
-
-                                    if ($fsrow['teacher_id'] == $_SESSION['teacher_id'] && $row['day'] == date('l')) {
-                                        echo '<a href="take_attend.php?subject_code=' . $row['subject_code'] . '&slot=' . $row['slot'] . '&batch=' . $row['batch'] . '&day=' . $row['day'] . '&semester=' . $row['semester'] . '" title="Take Attendance"><i class="fas fa-clipboard-check ms-2"></i></a>';
-                                    }
-
-                                    echo '</p>
-                                        </div>
-                                    </div>
-                                </td>';
-
-
-                                    if ($daychanger == 3) {
-                                        ?>
-                                        </tr>
-                                <?php
-                                    }
-                                    if ($daychanger == 3) {
-                                        $daychanger = 1;
-                                    } else {
-                                        $daychanger += 1;
-                                    }
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div> -->
-
-                    <?php
+                if (isset($_GET['year_level']) && isset($_GET['semester']) && isset($_GET['academic'])) { 
                     $semester = mysqli_escape_string($conn, $_GET['semester']);
-                    $batch = mysqli_escape_string($conn, $_GET['batch']);
+                    $year_level = mysqli_escape_string($conn, $_GET['year_level']); 
                     $academic = mysqli_escape_string($conn, $_GET['academic']);
-                    $sql = "SELECT * FROM `timetable` WHERE `academic_year`='$academic' AND  `branch`='" . $teacher_row['branch'] . "' AND `semester`='$semester' AND `batch`='$batch'";
-                    $sqlslot = "SELECT DISTINCT `slot`,`slotlabel` FROM `timetable` WHERE `academic_year`='$academic' AND  `branch`='" . $teacher_row['branch'] . "' AND `semester`='$semester' AND `batch`='$batch'";
+                    
+                    // Fetch timetable data
+                    $sql = "SELECT * FROM `timetable` WHERE `academic_year` = '$academic' AND `semester` = '$semester' AND `year_level` = '$year_level'";
+                    $sqlslot = "SELECT DISTINCT `slot`, `slotlabel` FROM `timetable` WHERE `academic_year` = '$academic' AND `semester` = '$semester' AND `year_level` = '$year_level'";
                     $result1 = mysqli_query($conn, $sqlslot);
                     $result2 = mysqli_query($conn, $sql);
 
@@ -169,11 +97,11 @@ $teacher_row = mysqli_fetch_assoc($teacher_res);
                         if (!isset($timetable[$day])) {
                             $timetable[$day] = [];
                         }
-                        $timetable[$day][$slot] = $row['subject_code'];
+                        $timetable[$day][$slot] = $row['event_code']; 
                     }
+                ?>
 
-                    ?>
-
+                    <h6 class="mb-3 text-center mt-3 text-danger">Time Table Details : Academic Year-[<?php echo $academic; ?>], Year Level-[<?php echo $year_level; ?>], Semester-[<?php echo $semester; ?>]</h6>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -195,15 +123,17 @@ $teacher_row = mysqli_fetch_assoc($teacher_res);
                                         <?php foreach ($slots as $slot => $slotLabel) : ?>
                                             <td>
                                                 <?php
-                                                $subjectCode = isset($dayData[$slot]) ? $dayData[$slot] : '';
-                                                if ($subjectCode) {
-                                                    $subjectSQL = "SELECT `name` FROM `subjects` WHERE `subject_code`='$subjectCode'";
+                                                $eventCode = isset($dayData[$slot]) ? $dayData[$slot] : ''; 
+                                                if ($eventCode) {
+                                                    // Query the event name based on the event code
+                                                    $subjectSQL = "SELECT `name` FROM `events` WHERE `event_code` = '$eventCode'"; 
                                                     $subjectRes = mysqli_query($conn, $subjectSQL);
                                                     $subjectRow = mysqli_fetch_assoc($subjectRes);
                                                     echo $subjectRow['name'];
 
-                                                    if ($fsrow['teacher_id'] == $_SESSION['teacher_id'] && $day == date('l')) {
-                                                        echo '<a href="take_attend.php?subject_code=' . $subjectCode . '&slot=' . $slot . '&batch=' . $batch . '&day=' . $day . '&semester=' . $semester . '&branch='. $teacher_row['branch'].'&slotlabel='. $slotLabel.'" title="Take Attendance"><i class="fas fa-clipboard-check ms-2"></i></a>';
+                                                    // Allow attendance taking if it’s the current leader’s event and the current day matches
+                                                    if ($day == date('l')) {
+                                                        echo '<a href="take_attend.php?event_code=' . $eventCode . '&slot=' . $slot . '&year_level=' . $year_level . '&day=' . $day . '&semester=' . $semester . '&slotlabel=' . $slotLabel . '" title="Take Attendance"><i class="fas fa-clipboard-check ms-2"></i></a>';
                                                     }
                                                 }
                                                 ?>
@@ -215,8 +145,6 @@ $teacher_row = mysqli_fetch_assoc($teacher_res);
                         </table>
                     </div>
 
-
-
                 <?php
                 }
                 ?>
@@ -225,8 +153,6 @@ $teacher_row = mysqli_fetch_assoc($teacher_res);
     </div>
 </div>
 <!-- Blank End -->
-
-
 
 <?php
 require('footer.php');

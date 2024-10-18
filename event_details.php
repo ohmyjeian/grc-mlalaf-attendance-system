@@ -39,31 +39,25 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                     <table class="table table-bordered" id="table">
                         <thead>
                             <tr>
-                                <th scope="col">Church Code</th>
-                                <th scope="col">Church Description</th>
-                                <th scope="col">Church Abbrevation</th>
+                                <th scope="col">Event Code</th>
+                                <th scope="col">Event Description</th>
                                 <th scope="col">Semester</th>
-                                <th scope="col">Church</th>
-                                <th scope="col">Leader ID</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            $sql = "SELECT * FROM subjects";
+                            $sql = "SELECT * FROM events"; 
                             $result = mysqli_query($conn, $sql);
                             while ($row = mysqli_fetch_assoc($result)) {
                             ?>
                                 <tr>
-                                    <th scope="row"><?php echo $row['subject_code']; ?></th>
+                                    <th scope="row"><?php echo $row['event_code']; ?></th> 
                                     <td><?php echo $row['name']; ?></td>
-                                    <td><?php echo $row['abbreviation']; ?></td>
                                     <td><?php echo $row['semester']; ?></td>
-                                    <td><?php echo $row['branch']; ?></td>
-                                    <td><?php echo $row['teacher_id']; ?></td>
                                     <td>
-                                        <button type="button" onclick="updatestud('<?php echo $row['subject_code']; ?>')" class="btn btn-square btn-outline-danger btn-sm"><i class="fas fa-edit"></i></button>
-                                        <button type="button" onclick="deletestud('<?php echo $row['subject_code']; ?>')" class="btn btn-square btn-outline-success btn-sm"><i class="fas fa-trash"></i></button>
+                                        <button type="button" onclick="updateEvent('<?php echo $row['event_code']; ?>')" class="btn btn-square btn-outline-danger btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button type="button" onclick="deleteEvent('<?php echo $row['event_code']; ?>')" class="btn btn-square btn-outline-success btn-sm"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                             <?php
@@ -79,6 +73,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
 <!-- Blank End -->
 
 
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -92,25 +87,19 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                     <div class="bg-light rounded h-100 p-4">
                         <form action="api_event.php?type=add" method="post">
                             <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-3 col-form-label">Church Code</label>
+                                <label for="inputEmail3" class="col-sm-3 col-form-label">Event Code</label>
                                 <div class="col-sm-9">
-                                    <input type="number" name="subjectcode" class="form-control" id="inputEmail3">
+                                    <input type="text" name="event_code" class="form-control" id="inputEmail3"> 
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="inputPassword3" class="col-sm-3 col-form-label">Church Description</label>
+                                <label for="inputPassword3" class="col-sm-3 col-form-label">Event Description</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="description" class="form-control" id="inputPassword3">
+                                    <input type="text" name="name" class="form-control" id="inputPassword3">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="inputPassword3" class="col-sm-3 col-form-label">Church Abbrevation</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="abbrevation" class="form-control" id="inputPassword3">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="inputPassword3" class="col-sm-3 col-form-label">Select Semeter</label>
+                                <label for="inputPassword3" class="col-sm-3 col-form-label">Select Semester</label>
                                 <div class="col-sm-9">
                                     <select class="form-select" name="semester" id="floatingSelect" aria-label="Floating label select example" required>
                                         <option selected="">Open this select menu</option>
@@ -119,42 +108,6 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                     </select>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <label for="inputPassword3" class="col-sm-3 col-form-label">Church</label>
-                                <div class="col-sm-9">
-                                    <select class="form-select" name="branch" id="floatingSelect" aria-label="Floating label select example" required>
-                                        <option selected="">Open this select menu</option>
-                                        <option value="TEAM MBBEM">TEAM MBBEM</option>
-                                        <option value="TEAM FJC">TEAM FJC</option>
-                                        <option value="TEAM JTCC">TEAM JTCC</option>
-                                        <option value="TEAM GTC">TEAM GTC</option>
-                                        <option value="TEAM GEC">TEAM GEC</option>
-                                        <option value="TEAM PRAISE">TEAM PRAISE</option>
-                                        <option value="TEAM LWCC">TEAM LWCC</option>
-                                        <option value="TEAM CCF">TEAM CCF</option>
-                                        <option value="TEAM ZION">TEAM ZION</option>
-                                        <option value="TEAM SHEPHERDS">TEAM SHEPHERDS</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="inputPassword3" class="col-sm-3 col-form-label">Lead By</label>
-                                <div class="col-sm-9">
-                                    <select class="form-select" name="teacherid" id="floatingSelect" aria-label="Floating label select example" required>
-                                        <option selected="">Open this select menu</option>
-                                        <?php
-                                        $tsql = "SELECT * FROM teachers";
-                                        $tresult = mysqli_query($conn, $tsql);
-                                        while ($trow = mysqli_fetch_assoc($tresult)) {
-                                        ?>
-                                            <option value="<?php echo $trow['id']; ?>"><?php echo $trow['name']; ?></option>
-                                        <?php
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-
                     </div>
                 </div>
             </div>
@@ -167,16 +120,17 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     </div>
 </div>
 
+
 <script>
-    function deletestud(enroll) {
+    function deleteEvent(eventcode) {
         let isDelete = confirm('Are you sure to delete?');
         if (isDelete) {
-            window.location = `api_event.php?type=delete&enroll=${enroll}`;
+            window.location = `api_event.php?type=delete&event_code=${eventcode}`; 
         }
     }
 
-    function updatestud(enroll) {
-        window.location = `api_event_update.php?enroll=${enroll}`;
+    function updateEvent(eventcode) {
+        window.location = `api_event_update.php?event_code=${eventcode}`; 
     }
 </script>
 

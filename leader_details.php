@@ -18,7 +18,6 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     </nav>
 </div>
 
-
 <!-- Blank Start -->
 <div class="container-fluid pt-4 px-4">
     <div class="text-center w-100">
@@ -28,7 +27,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
             unset($_SESSION['msg']);
         }
         ?>
-        <button type="button" class="btn btn-outline-primary m-2" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-plus me-2"></i>Add New Teacher</button>
+        <button type="button" class="btn btn-outline-primary m-2" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-plus me-2"></i>Add New Leader</button>
     </div>
 
     <div class="row bg-light rounded mx-0">
@@ -49,19 +48,23 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         </thead>
                         <tbody>
                             <?php
-                            $sql = "SELECT * FROM teachers";
+                            $sql = "SELECT * FROM leaders"; 
                             $result = mysqli_query($conn, $sql);
                             while ($row = mysqli_fetch_assoc($result)) {
                             ?>
                                 <tr>
                                     <th scope="row"><?php echo $row['id']; ?></th>
                                     <td><?php echo $row['name']; ?></td>
-                                    <td><?php echo $row['education']; ?></td>
-                                    <td><?php echo $row['designation']; ?></td>
-                                    <td><?php echo $row['branch']; ?></td>
+                                    <td><?php echo $row['church_role']; ?></td> 
+                                    <td><?php echo $row['designation']; ?></td> 
+                                    <td><?php echo $row['church']; ?></td> 
                                     <td>
-                                        <button type="button" onclick="updatestud('<?php echo $row['id']; ?>')" class="btn btn-square btn-outline-danger btn-sm"><i class="fas fa-edit"></i></button>
-                                        <button type="button" onclick="deletestud('<?php echo $row['id']; ?>')" class="btn btn-square btn-outline-success btn-sm"><i class="fas fa-trash"></i></button>
+                                        <button type="button" onclick="updateLeader('<?php echo $row['id']; ?>')" class="btn btn-square btn-outline-danger btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" onclick="deleteLeader('<?php echo $row['id']; ?>')" class="btn btn-square btn-outline-success btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             <?php
@@ -75,6 +78,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     </div>
 </div>
 <!-- Blank End -->
+
 
 
 <!-- Modal -->
@@ -92,30 +96,50 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                             <div class="row mb-3">
                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Leader ID</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="id" value="Teacher ID Automatic Allocate." readonly class="form-control" id="inputEmail3">
+                                    <input type="text" name="id" value="Leader ID Automatic Allocate." readonly class="form-control" id="inputEmail3">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label for="inputPassword3" class="col-sm-3 col-form-label">Leader Name</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="teachername" class="form-control" id="inputPassword3">
+                                    <input type="text" name="name" class="form-control" id="inputPassword3" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label for="inputPassword3" class="col-sm-3 col-form-label">Select Church Role</label>
                                 <div class="col-sm-9">
-                                    <select class="form-select" name="education" id="floatingSelect" aria-label="Floating label select example" required>
+                                    <select class="form-select" name="church_role" id="floatingSelect" aria-label="Floating label select example" required>
                                         <option selected="">Open this select menu</option>
-                                        <option value="B.E/B.Tech">B.E/B.Tech</option>
-                                        <option value="M.E/M.Tech">M.E/M.Tech</option>
-                                        <option value="Ph.d">Ph.d</option>
+                                        <option value="Pastor">Pastor</option>
+                                        <option value="Youth Pastor">Youth Pastor</option>
+                                        <option value="Primary Leader">Primary Leader</option>
+                                        <option value="Youth Leader">Youth Leader</option>
+                                        <option value="Cell Leader">Cell Leader</option>
+                                        <option value="Worship Leader">Worship Leader</option>
+                                        <option value="Prayer Leader">Prayer Leader</option>
+                                        <option value="Choir Member">Choir Member</option>
+                                        <option value="Musician">Musician</option>
+                                        <option value="Sound Technician">Sound Technician</option>
+                                        <option value="Lighting Technician">Lighting Technician</option>
+                                        <option value="Media Technician">Media Technician</option>
+                                        <option value="Video Operator">Video Operator</option>
+                                        <option value="Graphic Designer">Graphic Designer</option>
+                                        <option value="Usher">Usher</option>
+                                        <option value="Hospitality Team Member">Hospitality Team Member</option>
+                                        <option value="Children's Ministry Worker">Children's Ministry Worker</option>
+                                        <option value="Creative Arts Director">Creative Arts Director</option>
+                                        <option value="Social Media Manager">Social Media Manager</option>
+                                        <option value="Website Administrator">Website Administrator</option>
+                                        <option value="Dance Team Member">Dance Team Member</option>
+                                        <option value="Drama Team Member">Drama Team Member</option>
+                                        <option value="Regular Attendee / Member">Regular Attendee / Member</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label for="inputPassword3" class="col-sm-3 col-form-label">Church</label>
                                 <div class="col-sm-9">
-                                    <select class="form-select" name="branch" id="floatingSelect" aria-label="Floating label select example" required>
+                                    <select class="form-select" name="church" id="floatingSelect" aria-label="Floating label select example" required>
                                         <option selected="">Open this select menu</option>
                                         <option value="TEAM MBBEM">TEAM MBBEM</option>
                                         <option value="TEAM FJC">TEAM FJC</option>
@@ -135,17 +159,18 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                 <div class="col-sm-9">
                                     <select class="form-select" name="designation" id="floatingSelect" aria-label="Floating label select example" required>
                                         <option selected="">Open this select menu</option>
-                                        <option value="Instructor">Instructor</option>
-                                        <option value="Assistant Professor">Assistant Professor</option>
-                                        <option value="Associate Professor">Associate Professor</option>
-                                        <option value="Professor">Professor</option>
+                                        <option value="Ministry Coordinator">Ministry Coordinator</option>
+                                        <option value="Media and Tech Coordinator">Media and Tech Coordinator</option>
+                                        <option value="Worship Leader">Worship Leader</option>
+                                        <option value="Caregroup Leader">Caregroup Leader</option>
+                                        <option value="Student Leader">Student Leader</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label for="inputPassword3" class="col-sm-3 col-form-label">Password</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="password" class="form-control" id="inputPassword3">
+                                    <input type="text" name="password" class="form-control" id="inputPassword3" required>
                                 </div>
                             </div>
                     </div>
@@ -160,16 +185,17 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     </div>
 </div>
 
+
 <script>
-    function deletestud(enroll) {
+    function deleteLeader(id) {
         let isDelete = confirm('Are you sure to delete?');
         if (isDelete) {
-            window.location = `api_leader.php?type=delete&enroll=${enroll}`;
+            window.location = `api_leader.php?type=delete&id=${id}`;
         }
     }
 
-    function updatestud(enroll) {
-        window.location = `api_leader_update.php?enroll=${enroll}`;
+    function updateLeader(id) {
+        window.location = `api_leader_update.php?id=${id}`;
     }
 </script>
 

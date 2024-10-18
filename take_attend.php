@@ -4,44 +4,55 @@ require('conn.php');
 
 date_default_timezone_set('Asia/Manila');
 
-if ($_SESSION['usertype'] != 'TEACHER') {
+if ($_SESSION['usertype'] != 'LEADER') {
     session_destroy();
     header("location: login.php");
     exit();
 }
 
-
-
-
-if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']) && isset($_GET['day'])) {
-    $subject_code = mysqli_escape_string($conn, $_GET['subject_code']);
+if (isset($_GET['event_code']) && isset($_GET['slot']) && isset($_GET['year_level']) && isset($_GET['day'])) {
+    $event_code = mysqli_escape_string($conn, $_GET['event_code']);
     $slot = mysqli_escape_string($conn, $_GET['slot']);
-    $batch = mysqli_escape_string($conn, $_GET['batch']);
+    $year_level = mysqli_escape_string($conn, $_GET['year_level']);
     $day = mysqli_escape_string($conn, $_GET['day']);
     $semester = mysqli_escape_string($conn, $_GET['semester']);
-    $branch = mysqli_escape_string($conn, $_GET['branch']);
     $slotlabel = mysqli_escape_string($conn, $_GET['slotlabel']);
 
     $currentDate = date('d-m-Y');
     $currentDay = date('l');
     $currentTime = date('h:i:s a', time());
 
-    $fssql = "SELECT * FROM `subjects` WHERE `subject_code`=" . $subject_code;
+    // Fetch event details
+    $fssql = "SELECT * FROM `events` WHERE `event_code`='$event_code'";
     $fsresult = mysqli_query($conn, $fssql);
     $fsrow = mysqli_fetch_assoc($fsresult);
 
-    $sql = "SELECT * FROM `timetable` WHERE `subject_code`='$subject_code' AND `day`='$day' AND `slot`='$slot' AND `batch`='$batch'";
+    // Fetch timetable details including church info
+    $sql = "SELECT * FROM `timetable` WHERE `event_code`='$event_code' AND `day`='$day' AND `slot`='$slot' AND `year_level`='$year_level'";
     $result = mysqli_query($conn, $sql);
+    $timetableRow = mysqli_fetch_assoc($result);
 
-    $currentTimestamp = time();
     if ($result->num_rows == 1) {
 
+        $church = $timetableRow['church'];
 
-        $qrdata = array("subject_code" => $subject_code, "day" => $day, "slot" => $slot, "batch" => $batch, "currentDate" => $currentDate, "currentDay" => $currentDay, "qrgentime" => $currentTimestamp, "semester" => $semester, "branch" => $fsrow['branch']);
+        $qrdata = array(
+            "event_code" => $event_code,
+            "day" => $day,
+            "slot" => $slot,
+            "year_level" => $year_level,
+            "currentDate" => $currentDate,
+            "currentDay" => $currentDay,
+            "qrgentime" => time(),
+            "semester" => $semester,
+            "church" => $church
+        );
+
+        // Encode the data into a QR-friendly format
         $encryptQR = base64_encode(json_encode($qrdata));
     } else {
         $_SESSION['msg'] = '<div class="alert alert-danger" role="alert">
-        Class Not Availbale!.
+        Class Not Available!.
     </div>';
         header("location: take_attendance.php");
         exit();
@@ -115,7 +126,7 @@ if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']
                         </tr>
                         <tr>
                             <td>Year Level</td>
-                            <td><?php echo $batch; ?></td>
+                            <td><?php echo $year_level; ?></td>
                         </tr>
                         <tr>
                             <td>Semester</td>
@@ -143,7 +154,6 @@ if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']
                     </tbody>
                 </table>
 
-
             </div>
         </div>
     </div>
@@ -158,8 +168,8 @@ if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']
             type: 'GET',
             dataType: 'json',
             data: {
-                branch: "<?php echo $branch; ?>",
-                batch: "<?php echo $batch; ?>",
+                church: "<?php echo $church; ?>", 
+                year_level: "<?php echo $year_level; ?>", 
                 semester: "<?php echo $semester; ?>",
                 slot: "<?php echo $slot; ?>"
             },
@@ -184,6 +194,7 @@ if (isset($_GET['subject_code']) && isset($_GET['slot']) && isset($_GET['batch']
 
     setInterval(fetchNotifications, 2000); // Poll every 5 seconds
 </script>
+
 
 <?php
 require('footer.php');

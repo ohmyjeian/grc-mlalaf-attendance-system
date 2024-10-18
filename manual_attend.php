@@ -18,7 +18,6 @@ if ($_SESSION['usertype'] != 'ADMIN') {
     </nav>
 </div>
 
-
 <!-- Blank Start -->
 <div class="container-fluid pt-4 px-4">
     <div class="text-center w-100">
@@ -43,9 +42,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         <label class="visually-hidden" for="autoSizingSelect">Preference</label>
                         <select class="form-select" name="academic" id="autoSizingSelect">
                             <option value="">Select Academic Year</option>
-                            <option value="2022-23">2022-23</option>
-                            <option value="2023-24">2023-24</option>
-                            <option value="2024-25">2024-25</option>
+                            <option value="2024-2025">2024-2025</option>
                         </select>
                     </div>
                     <div class="col-auto">
@@ -58,7 +55,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                     </div>
                     <div class="col-auto">
                         <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-                        <select class="form-select" name="branch" id="autoSizingSelect">
+                        <select class="form-select" name="church" id="autoSizingSelect">
                             <option value="">Select Church</option>
                             <option value="TEAM MBBEM">TEAM MBBEM</option>
                             <option value="TEAM FJC">TEAM FJC</option>
@@ -74,7 +71,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                     </div>
                     <div class="col-auto">
                         <label class="visually-hidden" for="autoSizingSelect">Preference</label>
-                        <select class="form-select" name="batch" id="autoSizingSelect">
+                        <select class="form-select" name="year_level" id="autoSizingSelect">
                             <option value="">Select Year Level</option>
                             <option value="1">First</option>
                             <option value="2">Second</option>
@@ -90,12 +87,12 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                 </form>
 
                 <?php
-                if (isset($_GET['batch']) && isset($_GET['semester']) && isset($_GET['academic']) && isset($_GET['branch'])) {
+                if (isset($_GET['year_level']) && isset($_GET['semester']) && isset($_GET['academic']) && isset($_GET['church'])) {
                 ?>
 
-                    <h6 class="mb-3 text-center mt-3 text-danger">Time Table Details : Academic Year-[<?php echo $_GET['academic']; ?>],Church-[<?php echo $_GET['branch']; ?>], Year Level-[<?php echo $_GET['batch']; ?>], Semester-[<?php echo $_GET['semester']; ?>]</h6>
+                    <h6 class="mb-3 text-center mt-3 text-danger">Time Table Details : Academic Year-[<?php echo $_GET['academic']; ?>], Church-[<?php echo $_GET['church']; ?>], Year Level-[<?php echo $_GET['year_level']; ?>], Semester-[<?php echo $_GET['semester']; ?>]</h6>
 
-                    <!-- <div class="table-responsive">
+                    <!--div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -108,42 +105,38 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                             <tbody>
                                 <?php
                                 $semester = $_GET['semester'];
-                                $batch = $_GET['batch'];
+                                $year_level = $_GET['year_level'];
                                 $academic = $_GET['academic'];
-                                $branch = $_GET['branch'];
-                                $sql = "SELECT * FROM `timetable` WHERE `academic_year`='$academic' AND  `branch`='$branch' AND `semester`='$semester' AND `batch`='$batch'";
-                                // echo "<pre>";
+                                $church = $_GET['church'];
+                                $sql = "SELECT * FROM `timetable` WHERE `academic_year`='$academic' AND `church`='$church' AND `semester`='$semester' AND `year_level`='$year_level'";
                                 $result = mysqli_query($conn, $sql);
                                 $daychanger = 1;
                                 while ($row = mysqli_fetch_assoc($result)) {
-                                    // print_r($result);
-                                    // echo $daychanger;
                                     if ($daychanger == 1) {
                                 ?>
                                         <tr>
                                             <td><?php echo $row['day']; ?></td>
 
-                                        <?php
+                                <?php
                                     }
 
-                                    $fssql = "SELECT * FROM `subjects` WHERE `subject_code`=" . $row['subject_code'];
+                                    $fssql = "SELECT * FROM `events` WHERE `event_code`='" . $row['event_code'] . "'";
                                     $fsresult = mysqli_query($conn, $fssql);
                                     $fsrow = mysqli_fetch_assoc($fsresult);
-                                    echo ' <td>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <p>' . $fsrow['name'];
+                                    echo '<td>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <p>' . $fsrow['name'];
 
-                                    echo '<a href="give_manual_attend.php?subject_code=' . $row['subject_code'] . '&slot=' . $row['slot'] . '&batch=' . $row['batch'] . '&semester=' . $row['semester'] . '&branch=' . $fsrow['branch'] . '" title="Take Attendance"><i class="fas fa-clipboard-check ms-2"></i></a>';
+                                    echo '<a href="give_manual_attend.php?event_code=' . $row['event_code'] . '&slot=' . $row['slot'] . '&year_level=' . $row['year_level'] . '&semester=' . $row['semester'] . '&church=' . $fsrow['church'] . '" title="Take Attendance"><i class="fas fa-clipboard-check ms-2"></i></a>';
 
                                     echo '</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>';
-
+                                    </td>';
 
                                     if ($daychanger == 3) {
-                                        ?>
+                                ?>
                                         </tr>
                                 <?php
                                     }
@@ -159,13 +152,14 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                     </div> -->
 
 
+
                     <?php
                     $semester = mysqli_escape_string($conn, $_GET['semester']);
-                    $batch = mysqli_escape_string($conn, $_GET['batch']);
+                    $year_level = mysqli_escape_string($conn, $_GET['year_level']);
                     $academic = mysqli_escape_string($conn, $_GET['academic']);
-                    $branch = mysqli_escape_string($conn, $_GET['branch']);
-                    $sql = "SELECT * FROM `timetable` WHERE `academic_year`='$academic' AND  `branch`='$branch' AND `semester`='$semester' AND `batch`='$batch'";
-                    $sqlslot = "SELECT DISTINCT `slot`,`slotlabel` FROM `timetable` WHERE `academic_year`='$academic' AND  `branch`='$branch' AND `semester`='$semester' AND `batch`='$batch'";
+                    $church = mysqli_escape_string($conn, $_GET['church']);
+                    $sql = "SELECT * FROM `timetable` WHERE `academic_year`='$academic' AND `church`='$church' AND `semester`='$semester' AND `year_level`='$year_level'";
+                    $sqlslot = "SELECT DISTINCT `slot`,`slotlabel` FROM `timetable` WHERE `academic_year`='$academic' AND `church`='$church' AND `semester`='$semester' AND `year_level`='$year_level'";
                     $result1 = mysqli_query($conn, $sqlslot);
                     $result2 = mysqli_query($conn, $sql);
 
@@ -181,9 +175,8 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                         if (!isset($timetable[$day])) {
                             $timetable[$day] = [];
                         }
-                        $timetable[$day][$slot] = $row['subject_code'];
+                        $timetable[$day][$slot] = $row['event_code']; 
                     }
-
                     ?>
 
                     <div class="table-responsive">
@@ -207,13 +200,13 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                         <?php foreach ($slots as $slot => $slotLabel) : ?>
                                             <td>
                                                 <?php
-                                                $subjectCode = isset($dayData[$slot]) ? $dayData[$slot] : '';
-                                                if ($subjectCode) {
-                                                    $subjectSQL = "SELECT `name` FROM `subjects` WHERE `subject_code`='$subjectCode'";
+                                                $eventCode = isset($dayData[$slot]) ? $dayData[$slot] : ''; 
+                                                if ($eventCode) {
+                                                    $subjectSQL = "SELECT `name` FROM `events` WHERE `event_code`='$eventCode'"; 
                                                     $subjectRes = mysqli_query($conn, $subjectSQL);
                                                     $subjectRow = mysqli_fetch_assoc($subjectRes);
                                                     echo $subjectRow['name'];
-                                                    echo '<a href="give_manual_attend.php?subject_code=' . $subjectCode . '&slot=' . $slot . '&batch=' . $batch . '&semester=' . $semester . '&branch=' . $branch . '&day=' . $day . '" title="Take Attendance"><i class="fas fa-clipboard-check ms-2"></i></a>';
+                                                    echo '<a href="give_manual_attend.php?event_code=' . $eventCode . '&slot=' . $slot . '&year_level=' . $year_level . '&semester=' . $semester . '&church=' . $church . '&day=' . $day . '" title="Take Attendance"><i class="fas fa-clipboard-check ms-2"></i></a>';
                                                 }
                                                 ?>
                                             </td>

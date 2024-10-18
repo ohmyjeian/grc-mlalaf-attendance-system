@@ -5,7 +5,7 @@ session_start();
 
 date_default_timezone_set('Asia/Manila');
 
-if ($_SESSION['usertype'] != 'STUDENT') {
+if ($_SESSION['usertype'] != 'SCHOLAR') {
     session_destroy();
     header("location: login.php");
     exit();
@@ -31,10 +31,10 @@ $settingsql = "SELECT * FROM `settings` WHERE `id`='1'";
 $settingresult = mysqli_query($conn, $settingsql);
 $settingrow = mysqli_fetch_assoc($settingresult);
 
-// Example coordinates of the classroom or campus
+// Example coordinates of the church
 $validLatitude = $settingrow['lat'];
 $validLongitude = $settingrow['lon'];
-$allowedDistance = $settingrow['covarage']; // Allowable distance in kilometers
+$allowedDistance = $settingrow['coverage']; 
 
 if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
     $data = mysqli_escape_string($conn, $_GET['data']);
@@ -43,14 +43,14 @@ if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
     $ip_address = mysqli_escape_string($conn, $_GET['ip_address']);
     $decryptQR = base64_decode($data);
     $arrQRData = json_decode($decryptQR);
-    $enrollment_no = mysqli_escape_string($conn, $_SESSION['enrollment_no']);
+    $student_no = mysqli_escape_string($conn, $_SESSION['student_no']);
 
-    $subject_code = $arrQRData->subject_code;
+    $event_code = $arrQRData->event_code;
     $day = $arrQRData->day;
     $slot = $arrQRData->slot;
-    $batch = $arrQRData->batch;
+    $year_level = $arrQRData->year_level;
     $semester = $arrQRData->semester;
-    $branch = $arrQRData->branch;
+    $church = $arrQRData->church;
 
     $qrTimestamp  = $arrQRData->qrgentime;
 
@@ -62,8 +62,7 @@ if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
     $currentTimestamp = time();
     if (($currentTimestamp - $qrTimestamp) > 3600) {
         $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-        QR code has expired!.
-        </div>';
+        QR code has expired!.</div>';
         header("location: give_attend.php");
         exit();
     }
@@ -72,8 +71,7 @@ if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
     $distance = haversineGreatCircleDistance($validLatitude, $validLongitude, $lat, $lon);
     if ($distance > $allowedDistance) {
         $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-        You are not within the allowable distance to mark attendance.
-        </div>';
+        You are not within the allowable distance to mark attendance.</div>';
         header("location: give_attend.php");
         exit();
     }
@@ -94,83 +92,80 @@ if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
             if ($ipdata['proxy'] != true) {
                 // Check if the IP address is from the Philippines
                 if ($ipdata['countryCode'] === "PH") {
-                    $sql = "SELECT * FROM `students` WHERE `batch`='$batch' AND `enrollment_no`=$enrollment_no AND `semester`='$semester' AND `branch`='$branch'";
-
+                    $sql = "SELECT * FROM `scholars` WHERE `year_level`='$year_level' AND `student_no`='$student_no' AND `semester`='$semester' AND `church`='$church'";
                     $result = mysqli_query($conn, $sql);
 
                     if ($result->num_rows == 1) {
-                        $isql = "SELECT * FROM `attendance` WHERE `date`='$currentDate' AND `subject_code`=$subject_code AND `slot`=$slot AND `batch`='$batch' AND `ip_address`='$ip_address'";
+                        $isql = "SELECT * FROM `attendance` WHERE `date`='$currentDate' AND `event_code`='$event_code' AND `slot`='$slot' AND `year_level`='$year_level' AND `ip_address`='$ip_address'";
                         $ires = mysqli_query($conn, $isql);
 
                         if ($ires->num_rows == 0) {
-                            $csql = "SELECT * FROM `attendance` WHERE `date`='$currentDate' AND `enrollment_no`=$enrollment_no AND `subject_code`=$subject_code AND `slot`=$slot AND `batch`='$batch'";
+                            $csql = "SELECT * FROM `attendance` WHERE `date`='$currentDate' AND `student_no`='$student_no' AND `event_code`='$event_code' AND `slot`='$slot' AND `year_level`='$year_level'";
                             $cres = mysqli_query($conn, $csql);
                             if ($cres->num_rows == 0) {
-                                $fsql = "INSERT INTO `attendance`(`enrollment_no`, `date`, `day`, `subject_code`, `slot`, `batch`, `branch`, `semester`, `time`, `ip_address`) VALUES ('$enrollment_no', '$currentDate', '$currentDay', '$subject_code', '$slot', '$batch', '$branch', '$semester', '$currentTime', '$ip_address')";
+                                $fsql = "INSERT INTO `attendance`(`student_no`, `date`, `day`, `event_code`, `slot`, `year_level`, `church`, `semester`, `time`, `ip_address`) VALUES ('$student_no', '$currentDate', '$currentDay', '$event_code', '$slot', '$year_level', '$church', '$semester', '$currentTime', '$ip_address')";
                                 $fres = mysqli_query($conn, $fsql);
                                 if ($fres) {
-                                    $notiSQl = "INSERT INTO `attendance_noti`(`enrollment_no`, `date`, `day`, `subject_code`, `slot`, `batch`, `branch`, `semester`, `time`, `ip_address`) VALUES ('$enrollment_no', '$currentDate', '$currentDay', '$subject_code', '$slot', '$batch', '$branch', '$semester', '$currentTime', '$ip_address')";
+                                    // Insert notification
+                                    $notiSQl = "INSERT INTO `attendance_noti`(`student_no`, `date`, `day`, `event_code`, `slot`, `year_level`, `church`, `semester`, `time`, `ip_address`) VALUES ('$student_no', '$currentDate', '$currentDay', '$event_code', '$slot', '$year_level', '$church', '$semester', '$currentTime', '$ip_address')";
                                     $notiREs = mysqli_query($conn, $notiSQl);
 
+                                    // Log any errors during notification insert
+                                    if (!$notiREs) {
+                                        error_log("Notification insert error: " . mysqli_error($conn));
+                                    }
+
                                     $_SESSION['msg'] = '<div class="alert alert-success mb-2" role="alert">
-                                    Attendance Marked!.
-                                    </div>';
+                                    Attendance Marked!.</div>';
                                     header("location: give_attend.php");
                                     exit();
                                 } else {
                                     $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-                                    Something went wrong!.
-                                    </div>';
+                                    Something went wrong!.</div>';
                                     header("location: give_attend.php");
                                     exit();
                                 }
                             } else {
                                 $_SESSION['msg'] = '<div class="alert alert-warning mb-2" role="alert">
-                                Attendance Already Marked!.
-                                </div>';
+                                Attendance Already Marked!.</div>';
                                 header("location: give_attend.php");
                                 exit();
                             }
                         } else {
                             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-                            One IP Address can only give one attendance.
-                            </div>';
+                            One IP Address can only give one attendance.</div>';
                             header("location: give_attend.php");
                             exit();
                         }
                     } else {
                         $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-                        This Branch & Batch & Semester Not Allocate to you!.
-                        </div>';
+                        This Church & Year Level & Semester Not Allocated to you!.</div>';
                         header("location: give_attend.php");
                         exit();
                     }
                 } else {
                     $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-                    Only Philippine IP Allowed.
-                    </div>';
+                    Only Philippine IP Allowed.</div>';
                     header("location: give_attend.php");
                     exit();
                 }
             } else {
                 $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-                VPN and Proxy Usage Not Allowed. Please disable VPN and proxy.
-                </div>';
+                VPN and Proxy Usage Not Allowed. Please disable VPN and proxy.</div>';
                 header("location: give_attend.php");
                 exit();
             }
         }
     } else {
         $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-        VPN & Proxy Check Failed.
-        </div>';
+        VPN & Proxy Check Failed.</div>';
         header("location: give_attend.php");
         exit();
     }
 } else {
     $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-    QR & Location Not Provided. Refresh the page and try again.
-    </div>';
+    QR & Location Not Provided. Refresh the page and try again.</div>';
     header("location: give_attend.php");
     exit();
 }
+?>
