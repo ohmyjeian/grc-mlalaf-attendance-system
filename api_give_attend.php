@@ -27,11 +27,12 @@ function haversineGreatCircleDistance($latitudeFrom, $longitudeFrom, $latitudeTo
     return $angle * $earthRadius;
 }
 
+// Retrieve settings (church location, allowed coverage, etc.)
 $settingsql = "SELECT * FROM `settings` WHERE `id`='1'";
 $settingresult = mysqli_query($conn, $settingsql);
 $settingrow = mysqli_fetch_assoc($settingresult);
 
-// Example coordinates of the church
+// Church coordinates and allowed distance
 $validLatitude = $settingrow['lat'];
 $validLongitude = $settingrow['lon'];
 $allowedDistance = $settingrow['coverage'];
@@ -41,10 +42,13 @@ if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
     $lat = mysqli_escape_string($conn, $_GET['lat']);
     $lon = mysqli_escape_string($conn, $_GET['lon']);
     $ip_address = mysqli_escape_string($conn, $_GET['ip_address']);
+    
+    // Decode QR code data
     $decryptQR = base64_decode($data);
     $arrQRData = json_decode($decryptQR);
     $student_no = mysqli_escape_string($conn, $_SESSION['student_no']);
 
+    // Extract data from QR code
     $event_code = $arrQRData->event_code;
     $day = $arrQRData->day;
     $slot = $arrQRData->slot;
@@ -76,31 +80,33 @@ if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
         exit();
     }
 
-    // The URL of the API
+    // The URL of the API to check IP information
     $apiUrl = 'http://ip-api.com/json/' . $ip_address . '?fields=status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,proxy,query';
 
-    // Fetch the contents from the URL
+    // Fetch the contents from the API
     $response = file_get_contents($apiUrl);
 
-    // Check if the response is not false
+    // Check if the response is valid
     if ($response !== false) {
-        // Decode the JSON response
         $ipdata = json_decode($response, true);
 
-        // Check if decoding was successful
+        // Ensure the data was decoded successfully and that no proxy/VPN is being used
         if (json_last_error() === JSON_ERROR_NONE) {
             if ($ipdata['proxy'] != true) {
-                // Check if the IP address is from the Philippines
+                // Only allow Philippine IP addresses
                 if ($ipdata['countryCode'] === "PH") {
+
+                    // Check if the scholar's details match the event, year level, semester, and church
                     $sql = "SELECT * FROM `scholars` WHERE `year_level`='$year_level' AND `student_no`='$student_no' AND `semester`='$semester' AND `church`='$church'";
                     $result = mysqli_query($conn, $sql);
 
                     if ($result->num_rows == 1) {
-                        // Check if the same IP has marked attendance today
-                        $ipAttendanceCheckSql = "SELECT * FROM `attendance` WHERE `date`='$currentDate' AND `ip_address`='$ip_address'";
+                        // Check if the student has already marked attendance with the same IP today
+                        $ipAttendanceCheckSql = "SELECT * FROM `attendance` WHERE `date`='$currentDate' AND `student_no`='$student_no' AND `ip_address`='$ip_address'";
                         $ipAttendanceResult = mysqli_query($conn, $ipAttendanceCheckSql);
 
                         if ($ipAttendanceResult->num_rows == 0) {
+                            // Proceed with marking attendance
                             $csql = "SELECT * FROM `attendance` WHERE `date`='$currentDate' AND `student_no`='$student_no' AND `event_code`='$event_code' AND `slot`='$slot' AND `year_level`='$year_level'";
                             $cres = mysqli_query($conn, $csql);
                             if ($cres->num_rows == 0) {
@@ -134,13 +140,13 @@ if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
                             }
                         } else {
                             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-                            One IP Address can only give one attendance per day.</div>';
+                            Attendance from the same IP address has already been marked for today.</div>';
                             header("location: give_attend.php");
                             exit();
                         }
                     } else {
                         $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-                        This Church & Year Level & Semester Not Allocated to you!.</div>';
+                        This Church, Year Level, and Semester are not allocated to you!.</div>';
                         header("location: give_attend.php");
                         exit();
                     }
@@ -169,4 +175,5 @@ if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
     header("location: give_attend.php");
     exit();
 }
+
 ?>
