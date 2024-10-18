@@ -52,7 +52,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                     <div class="row mb-3">
                         <label for="inputPassword3" class="col-sm-3 col-form-label">Coverage</label>
                         <div class="col-sm-9">
-                            <input type="text" name="covarage" class="form-control" value="<?php echo $row['covarage']; ?>">
+                            <input type="text" name="coverage" class="form-control" value="<?php echo $row['coverage']; ?>">
                             <span class="text-success fs-6 d-block">*Note: How many area are available for students to give their attendance.</span>
                             <span class="text-success fs-6 d-block">*Note: Examples: 0.5 KM, 1.0 KM , 5.0 KM</span>
                             <span class="text-success fs-6 d-block">*Note: Only Give Number In Input Not KM.</span>

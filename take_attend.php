@@ -52,7 +52,7 @@ if (isset($_GET['event_code']) && isset($_GET['slot']) && isset($_GET['year_leve
         $encryptQR = base64_encode(json_encode($qrdata));
     } else {
         $_SESSION['msg'] = '<div class="alert alert-danger" role="alert">
-        Class Not Available!.
+        Event Not Available!.
     </div>';
         header("location: take_attendance.php");
         exit();
