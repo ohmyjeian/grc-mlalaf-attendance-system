@@ -21,7 +21,7 @@ require('conn.php');
             unset($_SESSION['msg']);
         }
         ?>
-        <!-- <button type="button" class="btn btn-outline-primary m-2" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-plus me-2"></i>Add New Subject</button> -->
+        <!-- <button type="button" class="btn btn-outline-primary m-2" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-plus me-2"></i>Add New Event</button> -->
     </div>
 
     <div class="row bg-light rounded mx-0">

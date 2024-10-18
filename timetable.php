@@ -376,7 +376,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?>
                                                             <?php
                                                             }
                                                             ?>
@@ -395,7 +395,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?>
                                                             <?php
                                                             }
                                                             ?>
@@ -414,7 +414,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> 
                                                             <?php
                                                             }
                                                             ?>
@@ -433,7 +433,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?>
                                                             <?php
                                                             }
                                                             ?>
@@ -452,7 +452,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> 
                                                             <?php
                                                             }
                                                             ?>
@@ -471,7 +471,7 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                             $tresult = mysqli_query($conn, $tsql);
                                                             while ($trow = mysqli_fetch_assoc($tresult)) {
                                                             ?>
-                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> <!-- Updated from subject_code to event_code -->
+                                                                <option value="<?php echo $trow['event_code']; ?>"><?php echo $trow['name']; ?></option> 
                                                             <?php
                                                             }
                                                             ?>

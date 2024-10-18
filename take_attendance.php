@@ -12,6 +12,7 @@ $leader_id = $_SESSION['leader_id'];
 $leader_sql = "SELECT * FROM leaders WHERE `id` = $leader_id"; 
 $leader_res = mysqli_query($conn, $leader_sql);
 $leader_row = mysqli_fetch_assoc($leader_res);
+$leader_church = $leader_row['church']; // Get the church associated with the leader
 ?>
 <div class="container pt-3 px-4 m-0">
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
@@ -41,6 +42,13 @@ $leader_row = mysqli_fetch_assoc($leader_res);
                 <form class="row gy-2 gx-3 align-items-center border p-2" action="take_attendance.php" method="get">
                     <div class="col-auto">
                         <p>View Time Table</p>
+                    </div>
+                    <div class="col-auto">
+                        <label class="visually-hidden" for="churchSelect">Select Church</label>
+                        <select class="form-select" name="church" id="churchSelect">
+                            <option value="">Select Church</option>
+                            <option value="<?php echo $leader_church; ?>"><?php echo $leader_church; ?></option>
+                        </select>
                     </div>
                     <div class="col-auto">
                         <label class="visually-hidden" for="semesterSelect">Semester</label>
@@ -74,34 +82,39 @@ $leader_row = mysqli_fetch_assoc($leader_res);
                 </form>
 
                 <?php
-                if (isset($_GET['year_level']) && isset($_GET['semester']) && isset($_GET['academic'])) { 
+                if (isset($_GET['year_level']) && isset($_GET['semester']) && isset($_GET['academic']) && isset($_GET['church'])) { 
                     $semester = mysqli_escape_string($conn, $_GET['semester']);
                     $year_level = mysqli_escape_string($conn, $_GET['year_level']); 
                     $academic = mysqli_escape_string($conn, $_GET['academic']);
-                    
-                    // Fetch timetable data
-                    $sql = "SELECT * FROM `timetable` WHERE `academic_year` = '$academic' AND `semester` = '$semester' AND `year_level` = '$year_level'";
-                    $sqlslot = "SELECT DISTINCT `slot`, `slotlabel` FROM `timetable` WHERE `academic_year` = '$academic' AND `semester` = '$semester' AND `year_level` = '$year_level'";
-                    $result1 = mysqli_query($conn, $sqlslot);
-                    $result2 = mysqli_query($conn, $sql);
+                    $church = mysqli_escape_string($conn, $_GET['church']);
 
-                    $slots = [];
-                    while ($row = mysqli_fetch_assoc($result1)) {
-                        $slots[$row['slot']] = $row['slotlabel'];
-                    }
+                    // Check if the selected church matches the leader's church
+                    if ($church !== $leader_church) {
+                        echo '<div class="alert alert-danger">You are not authorized to view this church\'s timetable.</div>';
+                    } else {
+                        // Fetch timetable data based on selected church
+                        $sql = "SELECT * FROM `timetable` WHERE `academic_year` = '$academic' AND `semester` = '$semester' AND `year_level` = '$year_level' AND `church` = '$church'";
+                        $sqlslot = "SELECT DISTINCT `slot`, `slotlabel` FROM `timetable` WHERE `academic_year` = '$academic' AND `semester` = '$semester' AND `year_level` = '$year_level' AND `church` = '$church'";
+                        $result1 = mysqli_query($conn, $sqlslot);
+                        $result2 = mysqli_query($conn, $sql);
 
-                    $timetable = [];
-                    while ($row = mysqli_fetch_assoc($result2)) {
-                        $day = $row['day'];
-                        $slot = $row['slot'];
-                        if (!isset($timetable[$day])) {
-                            $timetable[$day] = [];
+                        $slots = [];
+                        while ($row = mysqli_fetch_assoc($result1)) {
+                            $slots[$row['slot']] = $row['slotlabel'];
                         }
-                        $timetable[$day][$slot] = $row['event_code']; 
-                    }
+
+                        $timetable = [];
+                        while ($row = mysqli_fetch_assoc($result2)) {
+                            $day = $row['day'];
+                            $slot = $row['slot'];
+                            if (!isset($timetable[$day])) {
+                                $timetable[$day] = [];
+                            }
+                            $timetable[$day][$slot] = $row['event_code']; 
+                        }
                 ?>
 
-                    <h6 class="mb-3 text-center mt-3 text-danger">Time Table Details : Academic Year-[<?php echo $academic; ?>], Year Level-[<?php echo $year_level; ?>], Semester-[<?php echo $semester; ?>]</h6>
+                    <h6 class="mb-3 text-center mt-3 text-danger">Time Table Details : Academic Year-[<?php echo $academic; ?>], Year Level-[<?php echo $year_level; ?>], Semester-[<?php echo $semester; ?>], Church-[<?php echo $church; ?>]</h6>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -126,10 +139,10 @@ $leader_row = mysqli_fetch_assoc($leader_res);
                                                 $eventCode = isset($dayData[$slot]) ? $dayData[$slot] : ''; 
                                                 if ($eventCode) {
                                                     // Query the event name based on the event code
-                                                    $subjectSQL = "SELECT `name` FROM `events` WHERE `event_code` = '$eventCode'"; 
-                                                    $subjectRes = mysqli_query($conn, $subjectSQL);
-                                                    $subjectRow = mysqli_fetch_assoc($subjectRes);
-                                                    echo $subjectRow['name'];
+                                                    $eventSQL = "SELECT `name` FROM `events` WHERE `event_code` = '$eventCode'"; 
+                                                    $eventRes = mysqli_query($conn, $eventSQL);
+                                                    $eventRow = mysqli_fetch_assoc($eventRes);
+                                                    echo $eventRow['name'];
 
                                                     // Allow attendance taking if it’s the current leader’s event and the current day matches
                                                     if ($day == date('l')) {
@@ -146,6 +159,7 @@ $leader_row = mysqli_fetch_assoc($leader_res);
                     </div>
 
                 <?php
+                    }
                 }
                 ?>
             </div>

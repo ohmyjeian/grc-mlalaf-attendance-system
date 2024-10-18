@@ -10,7 +10,12 @@ if ($_SESSION['usertype'] != 'LEADER') {
 
 $leader_id = $_SESSION['leader_id'];
 
-// Removed leader/church-based filtering from the query since church and leader_id are no longer present in the `events` table
+// Fetch the church associated with the leader
+$leader_sql = "SELECT `church` FROM `leaders` WHERE `id` = $leader_id";
+$leader_res = mysqli_query($conn, $leader_sql);
+$leader_row = mysqli_fetch_assoc($leader_res);
+$leader_church = $leader_row['church']; // Get the church associated with the leader
+
 $subArrstr = "";
 
 // Fetch the event codes without using `leader_id`
@@ -24,8 +29,8 @@ while ($row = mysqli_fetch_assoc($sresult)) {
     }
 }
 
-// Fetch attendance based on event codes only, without filtering by church
-$sql = "SELECT * FROM `attendance` WHERE event_code IN ($subArrstr) ORDER BY id DESC"; 
+// Fetch attendance based on event codes only, and filter by church
+$sql = "SELECT * FROM `attendance` WHERE event_code IN ($subArrstr) AND church = '$leader_church' ORDER BY id DESC"; 
 $result = mysqli_query($conn, $sql);
 ?>
 <div class="container pt-3 px-4 m-0">
@@ -100,8 +105,8 @@ $result = mysqli_query($conn, $sql);
                     $event_code = $_GET['event']; 
                     $year_level = $_GET['year_level']; 
 
-                    // Adjusted the query to remove church filtering
-                    $sql = "SELECT * FROM attendance WHERE STR_TO_DATE(`date`, '%Y-%m-%d') BETWEEN STR_TO_DATE('$sdateString', '%Y-%m-%d') AND STR_TO_DATE('$edateString', '%Y-%m-%d') AND `event_code`='$event_code' AND `year_level`='$year_level' ORDER BY id DESC";
+                    // Adjusted the query to include church filtering
+                    $sql = "SELECT * FROM attendance WHERE STR_TO_DATE(`date`, '%Y-%m-%d') BETWEEN STR_TO_DATE('$sdateString', '%Y-%m-%d') AND STR_TO_DATE('$edateString', '%Y-%m-%d') AND `event_code`='$event_code' AND `year_level`='$year_level' AND `church` = '$leader_church' ORDER BY id DESC";
                     $result = mysqli_query($conn, $sql);
                 ?>
                     <h6>Filtered : Start Date= <?php echo $_GET['startdate']; ?> , End Date= <?php echo $_GET['enddate']; ?></h6>
@@ -129,7 +134,7 @@ $result = mysqli_query($conn, $sql);
                                         <th scope="row"><?php echo $sr; ?></th>
                                         <td><?php echo $row['student_no']; ?></td>
                                         <td><?php
-                                            $efssql = "SELECT * FROM `scholars` WHERE `student_no`=" . $row['student_no'];
+                                            $efssql = "SELECT * FROM `scholars` WHERE `student_no`='" . mysqli_real_escape_string($conn, $row['student_no']) . "'";
                                             $efsresult = mysqli_query($conn, $efssql);
                                             $efsrow = mysqli_fetch_assoc($efsresult);
                                             echo $efsrow['name'];
@@ -137,7 +142,7 @@ $result = mysqli_query($conn, $sql);
                                         <td><?php echo $row['date']; ?></td>
                                         <td><?php echo $row['day']; ?></td>
                                         <td><?php
-                                            $fssql = "SELECT * FROM `events` WHERE `event_code`=" . $row['event_code']; 
+                                            $fssql = "SELECT * FROM `events` WHERE `event_code`='" . mysqli_real_escape_string($conn, $row['event_code']) . "'"; 
                                             $fsresult = mysqli_query($conn, $fssql);
                                             $fsrow = mysqli_fetch_assoc($fsresult);
                                             echo $fsrow['name'];
@@ -156,56 +161,56 @@ $result = mysqli_query($conn, $sql);
                 <?php
                 } else {
                 ?>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped text-center" id="table">
-                                <thead>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped text-center" id="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Student No</th> 
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Day</th>
+                                    <th scope="col">Event</th> 
+                                    <th scope="col">Slot</th>
+                                    <th scope="col">Year Level</th> 
+                                    <th scope="col">Present at</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $sr = 1;
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                ?>
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Student No</th> 
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Day</th>
-                                        <th scope="col">Event</th> 
-                                        <th scope="col">Slot</th>
-                                        <th scope="col">Year Level</th> 
-                                        <th scope="col">Present at</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $sr = 1;
-                                    while ($row = mysqli_fetch_assoc($result)) {
-                                    ?>
-                                        <tr>
                                         <th scope="row"><?php echo $sr; ?></th>
-                                            <td><?php echo $row['student_no']; ?></td> 
-                                            <td>
-                                                <?php
-                                                $efssql = "SELECT * FROM `scholars` WHERE `student_no`='" . mysqli_real_escape_string($conn, $row['student_no']) . "'";
-                                                $efsresult = mysqli_query($conn, $efssql);
-                                                $efsrow = mysqli_fetch_assoc($efsresult);
-                                                echo $efsrow['name'];
-                                                ?>
-                                            </td>
-                                            <td><?php echo $row['date']; ?></td>
-                                            <td><?php echo $row['day']; ?></td>
-                                            <td><?php
-                                                $fssql = "SELECT * FROM `events` WHERE `event_code`='" . mysqli_real_escape_string($conn, $row['event_code']) . "'";
-                                                $fsresult = mysqli_query($conn, $fssql);
-                                                $fsrow = mysqli_fetch_assoc($fsresult);
-                                                echo $fsrow['name'];
-                                                ?></td> 
-                                            <td><?php echo $row['slot']; ?></td>
-                                            <td><?php echo $row['year_level']; ?></td> 
-                                            <td><?php echo $row['time']; ?></td>
-                                        </tr>
-                                    <?php
-                                        $sr++;
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                        <td><?php echo $row['student_no']; ?></td> 
+                                        <td>
+                                            <?php
+                                            $efssql = "SELECT * FROM `scholars` WHERE `student_no`='" . mysqli_real_escape_string($conn, $row['student_no']) . "'";
+                                            $efsresult = mysqli_query($conn, $efssql);
+                                            $efsrow = mysqli_fetch_assoc($efsresult);
+                                            echo $efsrow['name'];
+                                            ?>
+                                        </td>
+                                        <td><?php echo $row['date']; ?></td>
+                                        <td><?php echo $row['day']; ?></td>
+                                        <td><?php
+                                            $fssql = "SELECT * FROM `events` WHERE `event_code`='" . mysqli_real_escape_string($conn, $row['event_code']) . "'";
+                                            $fsresult = mysqli_query($conn, $fssql);
+                                            $fsrow = mysqli_fetch_assoc($fsresult);
+                                            echo $fsrow['name'];
+                                            ?></td> 
+                                        <td><?php echo $row['slot']; ?></td>
+                                        <td><?php echo $row['year_level']; ?></td> 
+                                        <td><?php echo $row['time']; ?></td>
+                                    </tr>
+                                <?php
+                                    $sr++;
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 <?php
                 }
                 ?>
@@ -213,10 +218,8 @@ $result = mysqli_query($conn, $sql);
         </div>
     </div>
 </div>
-    <!-- Blank End -->
+<!-- Blank End -->
 
-
-
-    <?php
-    require('footer.php');
-    ?>
+<?php
+require('footer.php');
+?>

@@ -92,7 +92,7 @@ if (isset($_GET['event_code']) && isset($_GET['slot']) && isset($_GET['year_leve
                 <input class="form-control" type="text" name="semester" value="<?php echo $semester; ?>" hidden>
                 <input class="form-control" type="text" name="church" value="<?php echo $branch; ?>" hidden>
                 <input class="form-control" type="text" name="slot" value="<?php echo $slot; ?>" hidden>
-                <input class="form-control" type="text" name="event_code" value="<?php echo $subject_code; ?>" hidden> 
+                <input class="form-control" type="text" name="event_code" value="<?php echo $event_code; ?>" hidden> 
                 <input class="form-control" type="text" id="currentDay" name="currentDay" value="<?php echo $currentDay; ?>" readonly hidden>
                 <input class="form-control" type="text" id="clientIp" name="clientIp" readonly hidden>
                 <div class="mb-3">

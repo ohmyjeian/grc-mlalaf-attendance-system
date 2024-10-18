@@ -146,7 +146,7 @@ if (isset($_GET['event_code']) && isset($_GET['slot']) && isset($_GET['year_leve
                         </tr>
                         <tr>
                             <td>QR Code <br>
-                                <p>(Students will Scan QR Code and Mark Attendance)</p>
+                                <p>(Students will scan the QR code to mark their attendance.)</p>
                             </td>
                             <td> <img class="img-fluid" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=<?php echo $encryptQR; ?>" title="qr generate" /></td>
                         </tr>

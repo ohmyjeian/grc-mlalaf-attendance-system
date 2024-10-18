@@ -47,7 +47,7 @@ $result = mysqli_query($conn, $sql);
                                 <th scope="col">Day</th>
                                 <th scope="col">Event</th>
                                 <th scope="col">Slot</th>
-                                <th scope="col">Batch</th>
+                                <th scope="col">Year Level</th>
                                 <th scope="col">Present at</th>
                             </tr>
                         </thead>
@@ -67,7 +67,7 @@ $result = mysqli_query($conn, $sql);
                                         echo $fsrow['name'];
                                         ?></td>
                                     <td><?php echo $row['slot']; ?></td>
-                                    <td><?php echo $row['batch']; ?></td>
+                                    <td><?php echo $row['year_level']; ?></td>
                                     <td><?php echo $row['time']; ?></td>
                                 </tr>
                             <?php

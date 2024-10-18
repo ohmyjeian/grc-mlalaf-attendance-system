@@ -202,10 +202,10 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                                 <?php
                                                 $eventCode = isset($dayData[$slot]) ? $dayData[$slot] : ''; 
                                                 if ($eventCode) {
-                                                    $subjectSQL = "SELECT `name` FROM `events` WHERE `event_code`='$eventCode'"; 
-                                                    $subjectRes = mysqli_query($conn, $subjectSQL);
-                                                    $subjectRow = mysqli_fetch_assoc($subjectRes);
-                                                    echo $subjectRow['name'];
+                                                    $eventSQL = "SELECT `name` FROM `events` WHERE `event_code`='$eventCode'"; 
+                                                    $eventRes = mysqli_query($conn, $eventSQL);
+                                                    $eventRow = mysqli_fetch_assoc($eventRes);
+                                                    echo $eventRow['name'];
                                                     echo '<a href="give_manual_attend.php?event_code=' . $eventCode . '&slot=' . $slot . '&year_level=' . $year_level . '&semester=' . $semester . '&church=' . $church . '&day=' . $day . '" title="Take Attendance"><i class="fas fa-clipboard-check ms-2"></i></a>';
                                                 }
                                                 ?>

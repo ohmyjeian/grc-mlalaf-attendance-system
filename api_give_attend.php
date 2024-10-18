@@ -34,7 +34,7 @@ $settingrow = mysqli_fetch_assoc($settingresult);
 // Example coordinates of the church
 $validLatitude = $settingrow['lat'];
 $validLongitude = $settingrow['lon'];
-$allowedDistance = $settingrow['coverage']; 
+$allowedDistance = $settingrow['coverage'];
 
 if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
     $data = mysqli_escape_string($conn, $_GET['data']);
@@ -96,10 +96,11 @@ if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
                     $result = mysqli_query($conn, $sql);
 
                     if ($result->num_rows == 1) {
-                        $isql = "SELECT * FROM `attendance` WHERE `date`='$currentDate' AND `event_code`='$event_code' AND `slot`='$slot' AND `year_level`='$year_level' AND `ip_address`='$ip_address'";
-                        $ires = mysqli_query($conn, $isql);
+                        // Check if the same IP has marked attendance today
+                        $ipAttendanceCheckSql = "SELECT * FROM `attendance` WHERE `date`='$currentDate' AND `ip_address`='$ip_address'";
+                        $ipAttendanceResult = mysqli_query($conn, $ipAttendanceCheckSql);
 
-                        if ($ires->num_rows == 0) {
+                        if ($ipAttendanceResult->num_rows == 0) {
                             $csql = "SELECT * FROM `attendance` WHERE `date`='$currentDate' AND `student_no`='$student_no' AND `event_code`='$event_code' AND `slot`='$slot' AND `year_level`='$year_level'";
                             $cres = mysqli_query($conn, $csql);
                             if ($cres->num_rows == 0) {
@@ -133,7 +134,7 @@ if (isset($_GET['data']) && isset($_GET['lat']) && isset($_GET['lon'])) {
                             }
                         } else {
                             $_SESSION['msg'] = '<div class="alert alert-danger mb-2" role="alert">
-                            One IP Address can only give one attendance.</div>';
+                            One IP Address can only give one attendance per day.</div>';
                             header("location: give_attend.php");
                             exit();
                         }
