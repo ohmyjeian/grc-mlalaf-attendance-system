@@ -228,7 +228,6 @@ if ($_SESSION['usertype'] != 'ADMIN') {
                                 <input type="text" class="form-control form-control-sm" placeholder="Slot Label" id="slotlabelinput">
                                 <button class="btn btn-dark btn-sm" onclick="addslot()" type="button">Add Slot</button>
                             </div>
-                            <p class="text-danger">*Note: Do not give the same label.</p>
                             <div class="table-responsive">
                                 <table class="table table-borderless text-center">
                                     <thead>
